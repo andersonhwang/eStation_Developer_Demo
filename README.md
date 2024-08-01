@@ -1,5 +1,7 @@
 # eStation Developer Edition
-Welcome to eStation(AP05) Developer Edition! eStation is designed for developers to quick integerate ETAG ESL&DSL with their projects. eStation use MQTT protocol and esay to configure/integerate.
+Welcome to eStation(AP05) Developer Edition! 
+
+eStation is designed for developers to quick integerate ETAG ESL&DSL with their projects. eStation use MQTT protocol and esay to configure/integerate.
 
 Release Date: 2024-08-08
 

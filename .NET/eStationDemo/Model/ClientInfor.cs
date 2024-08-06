@@ -1,6 +1,7 @@
 using System;
 using eStationDemo.Enum;
 using MQTTnet.Server;
+using ReactiveUI;
 
 namespace eStationDemo.Model
 {
@@ -12,52 +13,52 @@ namespace eStationDemo.Model
         /// <summary>
         /// ID
         /// </summary>
-        public string ID { get => id; set { id = value; NotifyPropertyChanged(nameof(ID)); } }
+        public string ID { get => id; set => this.RaiseAndSetIfChanged(ref id, value); } 
         /// <summary>
         /// MAC
         /// </summary>
-        public string MAC { get => mac; set { mac = value; NotifyPropertyChanged(nameof(MAC)); } }
+        public string MAC { get => mac; set => this.RaiseAndSetIfChanged(ref mac, value); } 
         /// <summary>
         /// Client status
         /// </summary>
-        public ClientStatus Status { get => status; set { status = value; NotifyPropertyChanged(nameof(Status)); } }
+        public ClientStatus Status { get => status; set => this.RaiseAndSetIfChanged(ref status, value); } 
         /// <summary>
         /// EndPoint
         /// </summary>
-        public string EndPoint { get => endPoint; set { endPoint = value; NotifyPropertyChanged(nameof(EndPoint)); } }
+        public string EndPoint { get => endPoint; set => this.RaiseAndSetIfChanged(ref endPoint, value); } 
         /// <summary>
         /// Last connect time
         /// </summary>
-        public DateTime? ConnectTime { get => connectTime; set { connectTime = value; NotifyPropertyChanged(nameof(ConnectTime)); } }
+        public DateTime? ConnectTime { get => connectTime; set => this.RaiseAndSetIfChanged(ref connectTime, value); } 
         /// <summary>
         /// Last disconnect time
         /// </summary>
-        public DateTime? DisconnectTime { get => disconnectTime; set { disconnectTime = value; NotifyPropertyChanged(nameof(DisconnectTime)); } }
+        public DateTime? DisconnectTime { get => disconnectTime; set => this.RaiseAndSetIfChanged(ref disconnectTime, value); } 
         /// <summary>˚º
         /// Last send time
         /// </summary>
-        public DateTime? SendTime { get => sendTime; set { sendTime = value; NotifyPropertyChanged(nameof(SendTime)); } }
+        public DateTime? SendTime { get => sendTime; set => this.RaiseAndSetIfChanged(ref sendTime, value); } 
         /// <summary>
         /// Last receive time
         /// </summary>
-        public DateTime? ReceiveTime { get => receiveTime; set { receiveTime = value; NotifyPropertyChanged(nameof(ReceiveTime)); } }
+        public DateTime? ReceiveTime { get => receiveTime; set => this.RaiseAndSetIfChanged(ref receiveTime, value); } 
         /// <summary>
         /// Last heartbeat time
         /// </summary>
-        public DateTime? HeartbeatTime { get => heartbeatTime; set { heartbeatTime = value; NotifyPropertyChanged(nameof(HeartbeatTime)); } }
+        public DateTime? HeartbeatTime { get => heartbeatTime; set => this.RaiseAndSetIfChanged(ref heartbeatTime, value); } 
         /// <summary>
         /// Firmware
         /// </summary>
-        public string Firmware { get => firmware; set { firmware = value; NotifyPropertyChanged(nameof(Firmware)); } }
+        public string Firmware { get => firmware; set => this.RaiseAndSetIfChanged(ref firmware, value); } 
         /// <summary>
         /// Total count
         /// </summary>
-        public int TotalCount { get => totalCount; set { totalCount = value; NotifyPropertyChanged(nameof(TotalCount)); } }
+        public int TotalCount { get => totalCount; set => this.RaiseAndSetIfChanged(ref totalCount, value); } 
 
         /// <summary>
         /// Send count
         /// </summary>
-        public int SendCount { get => sendCount; set { sendCount = value; NotifyPropertyChanged(nameof(SendCount)); } }
+        public int SendCount { get => sendCount; set => this.RaiseAndSetIfChanged(ref sendCount, value); } 
 
         /// <summary>
         /// eStation information

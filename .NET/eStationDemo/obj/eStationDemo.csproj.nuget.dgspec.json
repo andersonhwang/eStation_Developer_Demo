@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[11.1.0, )"
             },
+            "Avalonia.Controls.DataGrid": {
+              "target": "Package",
+              "version": "[11.1.0, )"
+            },
             "Avalonia.Desktop": {
               "target": "Package",
               "version": "[11.1.0, )"
@@ -56,6 +60,10 @@
               "version": "[11.1.0, )"
             },
             "Avalonia.Fonts.Inter": {
+              "target": "Package",
+              "version": "[11.1.0, )"
+            },
+            "Avalonia.ReactiveUI": {
               "target": "Package",
               "version": "[11.1.0, )"
             },

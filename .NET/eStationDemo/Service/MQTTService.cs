@@ -20,8 +20,7 @@ namespace eStationDemo.Service
     /// </summary>
     internal class MQTTService
     {
-        string UserName = string.Empty;
-        string Password = string.Empty;
+        ConnConfig connConfig;
         /// <summary>
         /// Mqtt server
         /// </summary>
@@ -30,11 +29,11 @@ namespace eStationDemo.Service
         /// Mqtt factory
         /// </summary>
         readonly MqttFactory _factory = new();
+        readonly static MQTTService _service = new();
         /// <summary>
         /// Clients list
         /// </summary>
         readonly List<ClientInfor> Clients = [];
-        readonly static MQTTService service = new();
         readonly static ConcurrentQueue<InterceptingPublishEventArgs> QueueReceive = new();
         /// <summary>
         /// eStation infor handler
@@ -51,7 +50,7 @@ namespace eStationDemo.Service
         /// <summary>
         /// Instance of MQTT service
         /// </summary>
-        public static MQTTService Instance => service;
+        public static MQTTService Instance => _service;
 
         /// <summary>
         /// Init MQTT service
@@ -63,26 +62,25 @@ namespace eStationDemo.Service
         /// <param name="actMessage">eStation message handler</param>
         /// <param name="actResult">Task result handler</param>
         /// <returns>The task</returns>
-        public async Task Init(int port, string userName, string password,
-                            Action<eStationInfor> actInfor,
-                            Action<eStationMessage> actMessage,
-                            Action<TaskResult> actResult)
+        public async Task Init(ConnConfig conn, Action<eStationInfor> actInfor,
+                            Action<eStationMessage> actMessage, Action<TaskResult> actResult)
         {
             ActApInfor = actInfor;
             ActApMessage = actMessage;
             ActTaskResult = actResult;
-            UserName = userName;
-            Password = password;
+            connConfig = conn;
 
             var optiosn = _factory
                 .CreateServerOptionsBuilder()
-                .WithDefaultEndpointPort(port)
+                .WithDefaultEndpointPort(conn.Port)
                 .Build();
             _server = _factory.CreateMqttServer(optiosn);
             _server.ValidatingConnectionAsync += Server_ValidatingConnectAsync;
             _server.InterceptingPublishAsync += Server_InterceptingPublishAsync;
             _server.ClientDisconnectedAsync += Server_ClientDisconnectedAsync;
             await _server.StartAsync();
+
+            await Task.Run(ProcessMessage);
         }
 
         #region Private Methods
@@ -93,7 +91,7 @@ namespace eStationDemo.Service
         /// <returns></returns>
         private Task Server_ValidatingConnectAsync(ValidatingConnectionEventArgs args)
         {
-            if (args.UserName != UserName || args.Password != Password)
+            if (args.UserName != connConfig.UserName || args.Password != connConfig.Password)
             {
                 args.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
             }
@@ -162,7 +160,7 @@ namespace eStationDemo.Service
         /// </summary>
         /// <param name="clientID">Client ID, for display</param>
         /// <param name="message">MQTT application message</param>
-        private void PublishMessage<T>(string clientID, string topic, T t)
+        public async Task PublishMessage<T>(string clientID, string topic, T t)
         {
             var client = Clients.First(x => x.ID.Equals(clientID));
             if (client == null) return; // Client not found.
@@ -172,7 +170,7 @@ namespace eStationDemo.Service
                 Topic = topic,
                 PayloadSegment = MessagePackSerializer.Serialize(t),
             };
-            _server.InjectApplicationMessage(new InjectedMqttApplicationMessage(message));
+            await _server.InjectApplicationMessage(new InjectedMqttApplicationMessage(message));
             Log.Debug("Send:" + JsonSerializer.Serialize(message));
         }
 

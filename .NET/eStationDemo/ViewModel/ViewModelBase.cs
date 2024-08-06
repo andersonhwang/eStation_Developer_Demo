@@ -1,6 +1,8 @@
-﻿namespace eStationDemo.ViewModel
+﻿using ReactiveUI;
+
+namespace eStationDemo.ViewModel
 {
-    public class ViewModelBase
+    public class ViewModelBase:ReactiveObject
     {
     }
 }

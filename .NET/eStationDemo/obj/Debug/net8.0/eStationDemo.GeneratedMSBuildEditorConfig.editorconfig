@@ -24,3 +24,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/View/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/View/PublishConfig.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/View/PublishESLTask.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

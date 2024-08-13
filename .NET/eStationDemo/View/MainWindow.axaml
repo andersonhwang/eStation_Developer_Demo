@@ -10,8 +10,29 @@
 	<Design.DataContext>
 		<vm:MainViewModel/>
 	</Design.DataContext>
-
-	<Grid ShowGridLines="True" Margin="5" ColumnDefinitions="Auto" RowDefinitions="Auto" >
-		<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<Grid RowDefinitions="Auto, Auto, Auto">
+		<TextBlock Grid.Row="0" Margin="20">MQTT Service</TextBlock>
+		<StackPanel Grid.Row="1" Margin="20" Orientation="Horizontal">
+			<TextBlock Margin="0 5">Port:</TextBlock>
+			<TextBox Text="{Binding Config.Port}" Watermark="Port"/>
+			<TextBlock Margin="0 5">User Name:</TextBlock>
+			<TextBox Text="{Binding Config.UserName}" Watermark="User name"/>
+			<TextBlock Margin="0 5">Password:</TextBlock>
+			<TextBox Text="{Binding Config.Password}" Watermark="Password" PasswordChar="*"/>
+			<Button Click="Run">Run</Button>
+		</StackPanel>
+		<DataGrid Grid.Row="2" Margin="20" ItemsSource="{Binding Clients}" AutoGenerateColumns="False" 
+			IsReadOnly="True" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+			<DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+			<DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+			<DataGridTextColumn Header="IP" Binding="{Binding EndPoint}"/>
+			<DataGridTextColumn Header="MAC" Binding="{Binding MAC}"/>
+			<DataGridTextColumn Header="Firmware" Binding="{Binding Firmware}"/>
+			<DataGridTextColumn Header="ConnectTime" Binding="{Binding ConnectTime}"/>
+			<DataGridTextColumn Header="DisconnectTime" Binding="{Binding DisconnectTime}"/>
+			<DataGridTextColumn Header="SendTime" Binding="{Binding SendTime}"/>
+			<DataGridTextColumn Header="ReceiveTime" Binding="{Binding ReceiveTime}"/>
+			<DataGridTextColumn Header="HeartbeatTime" Binding="{Binding HeartbeatTime}"/>
+		</DataGrid>
 	</Grid>
 </Window>

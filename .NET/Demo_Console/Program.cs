@@ -2,6 +2,7 @@
 using Demo_Common.Service;
 using Serilog;
 using SkiaSharp;
+using System;
 using System.IO.Compression;
 using System.Text.Json;
 
@@ -17,11 +18,6 @@ namespace Demo_Console
             Console.WriteLine("Console Demo - eStation Developer Edition");
             // Log, static configure
             var logTemplate = "{Timestamp:HH:mm:ss.fff}[{Level:u1}]{Message} {NewLine}{Exception}";
-            var img = SKData.Create("44.bmp");  // Test bitmap: 800*480 (RGBA mode)
-            var bmp = SKBitmap.Decode(img);
-            var bytes = Compress(bmp.Bytes);
-            var prefix = "4400000";     // Test with ETG0750-44
-            var index = 0;
 
             // Init log
             Log.Logger = new LoggerConfiguration()
@@ -71,25 +67,49 @@ namespace Demo_Console
             }
 
             MQTTService.Instance.Init(serverInfor,
-                infor =>
+                infor =>        // #Topic: Receive Topic: infor
                 {
                     Log.Information($"[Infor]{JsonSerializer.Serialize(infor)}");
                 },
-                message =>
+                message =>      // #Topic: message
                 {
-                    //Log.Information($"[Message]{JsonSerializer.Serialize(message)}");
+                    Log.Information($"[Message]{JsonSerializer.Serialize(message)}");
                 },
-                result =>
+                result =>       // #Topic: result
                 {
                     Log.Information($"[Result]{JsonSerializer.Serialize(result)}");
                 },
-                heartbeat =>
+                heartbeat =>    // #Topic: heartbeat
                 {
                     //Log.Information($"[Heartbeat]{JsonSerializer.Serialize(heartbeat)}");
                 }).Wait();
 
-            // 20K ESL test with topic: taskESL2
-            Console.ReadLine(); // After estation online
+            Console.WriteLine("[0]Push task with base64 string");
+            Console.WriteLine("[1]Push task with bytes array");
+            Console.WriteLine("[2]Config");
+
+            Console.ReadLine();
+            Console.ReadLine(); // Exit
+        }
+
+        /// <summary>
+        /// #Topic: Push task with base64 stirng
+        /// </summary>
+        private static void Topic_PushESL()
+        {
+
+        }
+
+        /// <summary>
+        /// #Topic： Push task with byte array
+        /// </summary>
+        private static void Topic_Push_ESL2()
+        {
+            var index = 0;
+            var img = SKData.Create("44.bmp");  // Test bitmap: 800*480 (RGBA mode)
+            var bmp = SKBitmap.Decode(img);
+            var bytes = Compress(bmp.Bytes);
+            var prefix = "4400000";     // Test with ETG0750-44
             for (int i = 0; i < 100; i++)
             {
                 var list = new List<TagEntity2>();
@@ -108,10 +128,22 @@ namespace Demo_Console
                 Thread.Sleep(5000);
                 Log.Information($"Round:{i}-{list.Count}");
             }
+        }
 
+        /// <summary>
+        /// #Topic: Config
+        /// </summary>
+        private static void Topic_Config()
+        {
 
-            Console.ReadLine();
-            Console.ReadLine(); // Exit
+        }
+
+        /// <summary>
+        /// #Topic: OTA
+        /// </summary>
+        private static void Topic_OTA()
+        {
+            // TODO
         }
 
         /// <summary>

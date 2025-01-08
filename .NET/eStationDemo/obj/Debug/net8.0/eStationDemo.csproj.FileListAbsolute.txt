@@ -80,3 +80,17 @@
 /Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/obj/Debug/net8.0/eStationDemo.dll
 /Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/obj/Debug/net8.0/refint/eStationDemo.dll
 /Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/obj/Debug/net8.0/eStationDemo.pdb
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.csproj.AssemblyReference.cache
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\Avalonia\Resources.Inputs.cache
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\Avalonia\resources
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.AssemblyInfoInputs.cache
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.AssemblyInfo.cs
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.csproj.CoreCompileInputs.cache
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.sourcelink.json
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\Avalonia\eStationDemo.dll
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\Avalonia\eStationDemo.pdb
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\refint\Avalonia\eStationDemo.dll
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.dll
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\refint\eStationDemo.dll
+D:\Workspace\eStation_Developer_Edition\.NET\eStationDemo\obj\Debug\net8.0\eStationDemo.pdb

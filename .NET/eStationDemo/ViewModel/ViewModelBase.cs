@@ -2,7 +2,7 @@
 
 namespace eStationDemo.ViewModel
 {
-    public class ViewModelBase:ReactiveObject
+    public class ViewModelBase : ReactiveObject
     {
     }
 }

@@ -31,7 +31,7 @@ namespace Demo_Common.Entity
         /// Message
         /// </summary>
         [Key(3)]
-        public MessageCode Message { get; set; } = 0;
+        public string Message { get; set; } = string.Empty;
 
         /// <summary>
         /// Tag results list

@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Demo_WPF.View
+namespace Demo_WPF
 {
     /// <summary>
-    /// Interaction logic for APList.xaml
+    /// Interaction logic for TaskWindow.xaml
     /// </summary>
-    public partial class APList : UserControl
+    public partial class TaskWindow : Window
     {
-        public APList()
+        public TaskWindow()
         {
             InitializeComponent();
         }

@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="Demo_WPF.View.ucApList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:local="clr-namespace:Demo_WPF"
+xmlns:h="clr-namespace:Demo_WPF.Helper"
+xmlns:v="clr-namespace:Demo_WPF.View"
+xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
+ mc:Ignorable="d" >
+    <UserControl.DataContext>
+        <vm:ApListViewModel/>
+    </UserControl.DataContext>
+    <GroupBox Header="AP List">
+        <DataGrid x:Name="dgAPList" ItemsSource="{Binding APs}" SelectedItem="{Binding SelectAP}" SelectionMode="Single" SelectionUnit="FullRow"
+                  AllowDrop="False" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="True">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="AP ID"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding IDM}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="IP"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding IPM}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Status"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding StatusM, Converter={StaticResource ApStatusTextConverter}}" Style="{StaticResource tbApStatus}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </GroupBox>
+</UserControl>

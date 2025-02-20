@@ -10,19 +10,20 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Demo_WPF.View
+namespace Demo_WPF
 {
     /// <summary>
-    /// Interaction logic for PublishConfig.xaml
+    /// Interaction logic for OTAWindow.xaml
     /// </summary>
-    public partial class PublishConfig : UserControl
+    public partial class OTAWindow : Window
     {
-        public PublishConfig()
+        public OTAWindow()
         {
             InitializeComponent();
+
+            Owner = Application.Current.MainWindow;
         }
     }
 }

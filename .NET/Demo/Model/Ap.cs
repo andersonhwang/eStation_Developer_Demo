@@ -4,7 +4,10 @@ using System.ComponentModel;
 
 namespace Demo_WPF.Model
 {
-    internal class ApModel : Ap
+    /// <summary>
+    /// AP model
+    /// </summary>
+    public class ApModel : Ap, INotifyPropertyChanged
     {
         /// <summary>
         /// ID
@@ -21,7 +24,7 @@ namespace Demo_WPF.Model
         /// <summary>
         /// EndPoint
         /// </summary>
-        public string EndPointM { get => EndPoint; set { EndPoint = value; NotifyPropertyChanged(nameof(EndPointM)); } }
+        public string IPM { get => Ip.ToString(); set { Ip = value; NotifyPropertyChanged(nameof(IPM)); } }
         /// <summary>
         /// Last connect time
         /// </summary>
@@ -47,13 +50,22 @@ namespace Demo_WPF.Model
         /// </summary>
         public string FirmwareM { get => Firmware; set { Firmware = value; NotifyPropertyChanged(nameof(FirmwareM)); } }
         /// <summary>
-        /// Total count
+        /// Wait count
         /// </summary>
-        public int TotalCountM { get => TotalCount; set { TotalCount = value; NotifyPropertyChanged(nameof(TotalCountM)); } }
+        public int WaitCountM { get => WaitCount; set { WaitCount = value; NotifyPropertyChanged(nameof(WaitCountM)); } }
         /// <summary>
         /// Send count
         /// </summary>
         public int SendCountM { get => SendCount; set { SendCount = value; NotifyPropertyChanged(nameof(SendCountM)); } }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">AP ID</param>
+        /// <param name="ip">AP IP</param>
+        /// <param name="status">AP status</param>
+        public ApModel(string id, string ip, ApStatus status = ApStatus.Online) : base(id, ip, status)
+        { }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void NotifyPropertyChanged(string propertyName)

@@ -3,7 +3,6 @@ using Demo_Common.Enum;
 using MessagePack;
 using Serilog;
 using System.Collections.Concurrent;
-using System.Net;
 using System.Text.Json;
 
 namespace Demo_Common.Service
@@ -13,8 +12,10 @@ namespace Demo_Common.Service
     /// </summary>
     public class SendService
     {
+        private readonly object _locker = new();
         private readonly ConcurrentQueue<ApData> RecvQueue = [];
         private readonly Dictionary<string, Ap> Clients = [];
+        private string SelectAP = string.Empty;
         private MQTT mqtt;
         private static SendService instance = new();
         /// <summary>
@@ -22,35 +23,37 @@ namespace Demo_Common.Service
         /// </summary>
         public static SendService Instance => instance;
 
+        public delegate void ApStatusDelegate(string id, string ip, ApStatus status);
+        public event ApStatusDelegate? ApStatusHandler;
         /// <summary>
         /// AP status delegate
         /// </summary>
         /// <param name="status">AP status</param>
-        public delegate void ApStatusDelegate(string id, ApStatus status);
-        public event ApStatusDelegate? ApStatusHandler;
+        public delegate void ApConfigDelegate(string id, ApConfig config);
+        public event ApConfigDelegate? ApConfigHandler;
         /// <summary>
         /// AP infor delegate
         /// </summary>
         /// <param name="infor">AP information</param>
-        public delegate void ApInforDelegate(ApInfor infor);
+        public delegate void ApInforDelegate(string id, ApInfor infor);
         public event ApInforDelegate? ApInforHandler;
         /// <summary>
         /// AP heartbeat delegate
         /// </summary>
         /// <param name="heartbeat">AP heartbeat</param>
-        public delegate void ApHeartbeatDelegate(ApHeartbeat heartbeat);
+        public delegate void ApHeartbeatDelegate(string id, ApHeartbeat heartbeat);
         public event ApHeartbeatDelegate? ApHeartbeatHandler;
         /// <summary>
         /// Task response delegate
         /// </summary>
         /// <param name="response">Task response</param>
-        public delegate void ApMessageDelegate(ApMessage message);
+        public delegate void ApMessageDelegate(string id, ApMessage message);
         public event ApMessageDelegate? ApMessageHandler;
         /// <summary>
         /// Task result delegate
         /// </summary>
         /// <param name="result"></param>
-        public delegate void TaskResultDelegate(TaskResult result);
+        public delegate void TaskResultDelegate(string id, TaskResult result);
         public event TaskResultDelegate? TaskResultHandler;
         /// <summary>
         /// Debug request delegate
@@ -64,6 +67,8 @@ namespace Demo_Common.Service
         /// <param name="item">Debug item</param>
         public delegate void DebugResponseDelegate(DebugItem item);
         public event DebugResponseDelegate? DebugResponseHandler;
+        public delegate void SelectApDelegate(Ap ap);
+        public event SelectApDelegate? SelectApHandler;
 
         /// <summary>
         /// Run send service
@@ -93,28 +98,27 @@ namespace Demo_Common.Service
                                     if (infor is null) continue;
                                     json = JsonSerializer.Serialize(infor);
                                     UpdateInfor(item.Id, infor);
-                                    ApInforHandler?.Invoke(infor);
-                                    ApStatusHandler?.Invoke(item.Id, ApStatus.Online);
+                                    ApInforHandler?.Invoke(item.Id, infor);
                                     break;
                                 case 0x81:
                                     var message = MessagePackSerializer.Deserialize<ApMessage>(item.Data);
                                     if (message is null) continue;
                                     json = JsonSerializer.Serialize(message);
-                                    ApMessageHandler?.Invoke(message);
+                                    ApMessageHandler?.Invoke(item.Id, message);
                                     break;
                                 case 0x82:
                                     var result = MessagePackSerializer.Deserialize<TaskResult>(item.Data);
                                     if (result is null) continue;
                                     json = JsonSerializer.Serialize(result);
-                                    TaskResultHandler?.Invoke(result);
+                                    TaskResultHandler?.Invoke(item.Id, result);
                                     break;
                                 case 0x83:
                                     var heartbeat = MessagePackSerializer.Deserialize<ApHeartbeat>(item.Data);
                                     if (heartbeat is null) continue;
                                     json = JsonSerializer.Serialize(heartbeat);
-                                    ApHeartbeatHandler?.Invoke(heartbeat);
+                                    ApHeartbeatHandler?.Invoke(item.Id, heartbeat);
                                     break;
-                                default: 
+                                default:
                                     break;
                             }
                             DebugResponseHandler?.Invoke(new DebugItem(item.TopicAlias, item.Topic, json));
@@ -126,7 +130,7 @@ namespace Demo_Common.Service
                     }
                 });
 
-                mqtt = new MQTT(conn, ProcessApStatus, ProcessApData, AddClient);
+                mqtt = new MQTT(conn, ProcessApStatus, ProcessApData);
                 return mqtt.Run();
             }
             catch (Exception ex)
@@ -179,35 +183,46 @@ namespace Demo_Common.Service
         public void Register(DebugRequestDelegate debug) => DebugRequestHandler += debug;
 
         /// <summary>
+        /// Register select client event
+        /// </summary>
+        /// <param name="ap"></param>
+        public void Register(SelectApDelegate ap) => SelectApHandler += ap;
+
+        /// <summary>
         /// AP status handler
         /// </summary>
         /// <param name="id">Client ID</param>
         /// <param name="status">AP status</param>
-        public void ProcessApStatus(string id, ApStatus status)
+        public void ProcessApStatus(string id, string ip, ApStatus status)
         {
-            ApStatusHandler?.Invoke(id, status);
-
-            if (Clients.TryGetValue(id, out Ap? ap))
+            try
             {
-                ap.Status = status;
-                switch (ap.Status)
+                lock (_locker)
                 {
-                    case ApStatus.Online:
-                        ap.Status = ApStatus.Online;
-                        ap.ConnectTime = DateTime.Now;
-                        break;
-                    case ApStatus.Offline:
-                        ap.Status = ApStatus.Offline;
-                        ap.DisconnectTime = DateTime.Now;
-                        break;
-                    case ApStatus.Working:
-                        ap.Status = ApStatus.Working;
-                        ap.SendTime = DateTime.Now;
-                        break;
-                    case ApStatus.Connecting:
-                        ap.Status = ApStatus.Connecting;
-                        break;
+                    if (!Clients.ContainsKey(id))
+                    {
+                        Clients.Add(id, new Ap(id, ip, status));
+                    }
+
+                    if (Clients.TryGetValue(id, out Ap? ap))
+                    {
+                        ap.Status = status;
+                        switch (ap.Status)
+                        {
+                            case ApStatus.Online:
+                                ap.ConnectTime = DateTime.Now;
+                                break;
+                            case ApStatus.Offline:
+                                ap.DisconnectTime = DateTime.Now;
+                                break;
+                        }
+                    }
                 }
+                ApStatusHandler?.Invoke(id, ip, status);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Process_Ap_Status_Error");
             }
         }
 
@@ -218,17 +233,21 @@ namespace Demo_Common.Service
         public void ProcessApData(ApData data)
         {
             RecvQueue.Enqueue(data);
+            if (Clients.TryGetValue(data.Id, out Ap? ap))
+            {
+                ap.ReceiveTime = DateTime.Now;
+            }
         }
 
         /// <summary>
-        /// Add client
+        /// Select AP
         /// </summary>
         /// <param name="id">AP ID</param>
-        /// <param name="endPoint">EndPoint</param>
-        public void AddClient(string id, EndPoint endPoint)
+        public void SelectAp(string id)
         {
-            if (Clients.ContainsKey(id)) return;
-            Clients.Add(id, new Ap(id, endPoint));
+            if (!Clients.TryGetValue(id, out Ap? ap)) return;
+            SelectAP = id;
+            SelectApHandler?.Invoke(ap);
         }
 
         /// <summary>
@@ -242,8 +261,7 @@ namespace Demo_Common.Service
         /// <returns>Send result</returns>
         public async Task<SendResult> Send<T>(string id, ushort alias, string topic, T t)
         {
-            if (!Clients.ContainsKey(id)) return SendResult.NotExist;
-            var client = Clients[id];
+            if (!Clients.TryGetValue(id, out Ap? client)) return SendResult.NotExist;
             if (client.Status != ApStatus.Online) return SendResult.Offline;
 
             DebugRequestHandler?.Invoke(new DebugItem(alias, topic, JsonSerializer.Serialize(t)));
@@ -255,11 +273,14 @@ namespace Demo_Common.Service
         /// </summary>
         /// <param name="id">AP ID</param>
         /// <param name="infor">AP infor</param>
-        public void UpdateInfor(string id, ApInfor infor)
+        private void UpdateInfor(string id, ApInfor infor)
         {
             if (Clients.TryGetValue(id, out Ap? ap))
             {
                 ap.Infor = infor;
+                ap.Firmware = infor.ApVersion;
+                ap.Mac = infor.MAC;
+                if (id.Equals(SelectAP)) SelectApHandler?.Invoke(ap);
             }
         }
     }

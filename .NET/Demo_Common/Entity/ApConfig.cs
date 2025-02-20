@@ -19,31 +19,36 @@ namespace Demo_Common.Entity
         /// Connection parameters
         /// </summary>
         [Key(2)]
-        public string[] ConnParam { get; set; } = [];
+        public string[] ConnParam { get; set; } = ["test", "123456"];
+        /// <summary>
+        /// Encrypt with SslProtocol.Tls12
+        /// </summary>
+        [Key(3)]
+        public bool Encrypt { get; set; } = false;
         /// <summary>
         /// Auto network
         /// </summary>
-        [Key(3)]
+        [Key(4)]
         public bool AutoIP { get; set; } = true;
         /// <summary>
         /// Local IP, empty if auto network
         /// </summary>
-        [Key(4)]
+        [Key(5)]
         public string LocalIP { get; set; } = string.Empty;
         /// <summary>
         /// Subnet mask, empty if auto network
         /// </summary>
-        [Key(5)]
+        [Key(6)]
         public string Subnet { get; set; } = string.Empty;
         /// <summary>
         /// Gateway, empty if auto network
         /// </summary>
-        [Key(6)]
+        [Key(7)]
         public string Gateway { get; set; } = string.Empty;
         /// <summary>
         /// Heartbeat speed
         /// </summary>
-        [Key(7)]
+        [Key(8)]
         public int Heartbeat { get; set; } = 15;
     }
 }

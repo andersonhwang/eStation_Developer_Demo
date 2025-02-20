@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="Demo_WPF.View.ucApInfor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Demo_WPF"
+            xmlns:h="clr-namespace:Demo_WPF.Helper"
+            xmlns:v="clr-namespace:Demo_WPF.View"
+            xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
+             mc:Ignorable="d" >
+    <UserControl.DataContext>
+        <vm:ApInforViewModel/>
+    </UserControl.DataContext>
+    <GroupBox Header="AP Information">
+        <Grid h:GridHelper.LineBrush="Black" h:GridHelper.ShowBorder="True" h:GridHelper.LineThickness="0.5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="ID"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AP.IDM, Mode=OneWay}" />
+            <Button Grid.Row="0" Grid.Column="2" Command="{Binding CmdConfig}" IsEnabled="{Binding AP.StatusM, Converter={StaticResource ApStatusBoolConverter}}" Content="Config"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="IP"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.IPM, Mode=OneWay}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="MAC"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.MACM, Mode=OneWay}" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Firmware"/>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AP.FirmwareM, Mode=OneWay}" />
+            <Button Grid.Row="3" Grid.Column="2" Command="{Binding CmdOTA}" IsEnabled="{Binding AP.StatusM, Converter={StaticResource ApStatusBoolConverter}}" Content="OTA"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Status"/>
+            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.StatusM, Converter={StaticResource ApStatusTextConverter}, Mode=TwoWay}" />
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Last Online"/>
+            <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.ConnectTimeM, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" />
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Last Offline"/>
+            <TextBlock Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.DisconnectTimeM, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" />
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Last Heartbeat"/>
+            <TextBlock Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.HeartbeatTimeM, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" />
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="Last Send"/>
+            <TextBlock Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.SendTimeM, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" />
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="Last Receive"/>
+            <TextBlock Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.ReceiveTimeM, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" />
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="Task Count"/>
+            <TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding AP.SendCountM, Mode=OneWay}" />
+            <TextBlock Grid.Row="10" Grid.Column="2" Text="{Binding AP.WaitCountM, Mode=OneWay}" />
+        </Grid>
+    </GroupBox>
+</UserControl>

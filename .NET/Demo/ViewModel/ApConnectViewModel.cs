@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Input;
+﻿using Demo_Common.Helper;
+using Demo_Common.Service;
 using Demo_WPF.Helper;
 using Demo_WPF.Model;
-using Demo_Common.Service;
+using System.Net;
+using System.Net.Sockets;
+using System.Windows.Input;
 
 namespace Demo_WPF.ViewModel
 {
     internal class ApConnectViewModel : ViewModelBase
     {
         private string port = "9071";
-        private ConnInfo conn = new();
+        private ConnInfoModel conn = new();
 
         /// <summary>
         /// Port
@@ -25,7 +20,7 @@ namespace Demo_WPF.ViewModel
         /// <summary>
         /// AP information
         /// </summary>
-        public ConnInfo Conn { get { return conn; } set { conn = value; NotifyPropertyChanged(nameof(conn)); } }
+        public ConnInfoModel Conn { get { return conn; } set { conn = value; NotifyPropertyChanged(nameof(conn)); } }
         /// <summary>
         /// Command - Check
         /// </summary>
@@ -44,7 +39,7 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         public ApConnectViewModel()
         {
-            Conn = FileHelper.TryGet<ConnInfo>(nameof(ConnInfo) + ".json");
+            Conn = FileHelper.TryGet<ConnInfoModel>(nameof(ConnInfoModel) + ".json");
 
             CmdCheck = new MyCommand(DoCheck, CanCheck);
             CmdRun = new MyCommand(DoRun, CanRun);
@@ -63,10 +58,9 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoCheck(object obj)
         {
-            var result = Check();
-            if (result > 0)
+            if (Check() > 0)
             {
-                MsgHelper.Infor($"Port {result} is avaliable");
+                MsgHelper.Infor($"Port {Conn.Port} is avaliable");
             }
         }
 
@@ -90,7 +84,7 @@ namespace Demo_WPF.ViewModel
             if (result > 0)
             {
                 Conn.Port = result;
-                IsRun = MQTTService.Instance.Run(Conn);
+                IsRun = SendService.Instance.Run(Conn);
             }
             if (IsRun)
             {
@@ -103,7 +97,7 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        private bool CanCertificate(object obj) => Conn.Security;
+        private bool CanCertificate(object obj) => Conn.EncryptM;
 
         /// <summary>
         /// Do certificate
@@ -111,7 +105,7 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoCertificate(object obj)
         {
-            var dialog = new CertificateWindow((path, key) => { Conn.Certificate = path; Conn.Key = key; });
+            var dialog = new CertificateWindow((path, key) => { Conn.Certificate = path; Conn.CertificateKeyM = key; });
             dialog.ShowDialog();
         }
 

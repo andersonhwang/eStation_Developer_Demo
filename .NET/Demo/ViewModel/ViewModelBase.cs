@@ -1,6 +1,4 @@
-﻿using Demo_Common.Enum;
-using Demo_Common.Service;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Demo_WPF.ViewModel
@@ -10,65 +8,29 @@ namespace Demo_WPF.ViewModel
     /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
+        private string selectAP = string.Empty;
         private bool isConnect = false;
         private bool isRun = false;
 
         /// <summary>
-        /// AP is connect
+        /// Select AP ID
         /// </summary>
-        public bool IsConnect
-        {
-            get => isConnect;
-            set { isConnect = value; NotifyPropertyChanged(nameof(IsConnect)); }
-        }
+        public string SelectAP { get => selectAP; set { selectAP = value; NotifyPropertyChanged(nameof(SelectAP)); } }
+
+        /// <summary>
+        /// Select AP is connect
+        /// </summary>
+        public bool IsConnect { get => isConnect; set { isConnect = value; NotifyPropertyChanged(nameof(IsConnect)); } }
 
         /// <summary>
         /// Send service is run
         /// </summary>
-        public bool IsRun
-        {
-            get => isRun;
-            set { isRun = value; NotifyPropertyChanged(nameof(IsRun)); }
-        }
+        public bool IsRun { get => isRun; set { isRun = value; NotifyPropertyChanged(nameof(IsRun)); } }
 
         /// <summary>
         /// Basic constructor
         /// </summary>
-        public ViewModelBase()
-        {
-            MQTTService.Instance.Register(ApStatusHandler);
-        }
-
-        /// <summary>
-        /// Ap status handler
-        /// </summary>
-        /// <param name="status"></param>
-        public void ApStatusHandler(ApStatus status) => IsConnect = status is ApStatus.Online or ApStatus.Working;
-
-        /// <summary>
-        /// Can send
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns>Yes</returns>
-        public bool CanSend(object parameter) => IsConnect;
-
-        /// <summary>
-        /// Get color
-        /// </summary>
-        /// <param name="r">Red</param>
-        /// <param name="g">Green</param>
-        /// <param name="b">Blue</param>
-        /// <returns>Color</returns>
-        public static int GetColor(bool r, bool g, bool b)
-        {
-            var data = 0;
-            data += (byte)(r ? 1 : 0);                          // Bit 2
-            data <<= 1;
-            data += (byte)(g ? 1 : 0);                          // Bit 1
-            data <<= 1;
-            data += (byte)(b ? 1 : 0);                          // Bit 0
-            return data;
-        }
+        public ViewModelBase() { }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         /// <summary>
@@ -77,6 +39,22 @@ namespace Demo_WPF.ViewModel
         /// <param name="propertyName">Property name</param>
         public void NotifyPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// Base of dialog view model
+    /// </summary>
+    public class DialogViewModelBase : ViewModelBase
+    {
+        private bool? dialogResult;
+        /// <summary>
+        /// Dialog result
+        /// </summary>
+        public bool? DialogResult
+        {
+            get => dialogResult;
+            set { dialogResult = value; NotifyPropertyChanged(nameof(DialogResult)); }
+        }
     }
 
     /// <summary>

@@ -4,7 +4,9 @@ namespace Demo_WPF.Model
 {
     internal class Tag : ModelBase
     {
+        private bool select = false;
         private string id = string.Empty;
+        private byte version = 0;
         private TagStatus status = TagStatus.Init;
         private DateTime? lastSend = null;
         private DateTime? lastRecv = null;
@@ -17,9 +19,21 @@ namespace Demo_WPF.Model
         private int heartbeatCount = 0;
 
         /// <summary>
+        /// Select
+        /// </summary>
+        public bool Select { get => select; set { select = value; NotifyPropertyChanged(nameof(Select)); } }
+        /// <summary>
         /// ID
         /// </summary>
-        public string ID { get => id; set { id = value; NotifyPropertyChanged(nameof(ID)); } }
+        public string ID { get => id; set { id = value; NotifyPropertyChanged(nameof(ID)); NotifyPropertyChanged(nameof(TagType)); } }
+        /// <summary>
+        /// Tag type
+        /// </summary>
+        public string TagType { get => "--"; }
+        /// <summary>
+        /// Version
+        /// </summary>
+        public byte Version { get => version; set { version = value; NotifyPropertyChanged(nameof(Version)); } }
         /// <summary>
         /// Status
         /// </summary>
@@ -60,5 +74,14 @@ namespace Demo_WPF.Model
         /// Heartbeat count
         /// </summary>
         public int HeartbeatCount { get => heartbeatCount; set { heartbeatCount = value; NotifyPropertyChanged(nameof(HeartbeatCount)); } }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="id"></param>
+        public Tag(string id)
+        {
+            ID = id;
+        }
     }
 }

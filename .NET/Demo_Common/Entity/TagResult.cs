@@ -12,7 +12,7 @@ namespace Demo_Common.Entity
         /// Tag ID
         /// </summary>
         [Key(0)]
-        public string TagID { get; set; } = string.Empty;
+        public string TagId { get; set; } = string.Empty;
         /// <summary>
         /// RF power
         /// </summary>

@@ -22,6 +22,8 @@ namespace Demo_WPF
         public CertificateWindow(Action<string, string> action)
         {
             InitializeComponent();
+
+            Owner = Application.Current.MainWindow;
         }
     }
 }

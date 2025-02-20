@@ -14,9 +14,8 @@ namespace Demo_Common.Service
 {
     internal class MQTT
     {
-        private readonly Action<string, ApStatus> ApStatusHandler;
+        private readonly Action<string, string, ApStatus> ApStatusHandler;
         private readonly Action<ApData> ApDataHandler;
-        private readonly Action<string, EndPoint> ClientHandler;
         private readonly ConnInfo Connection;
         private MqttServer mqttServer;
 
@@ -26,12 +25,11 @@ namespace Demo_Common.Service
         /// <param name="info">Connection infor</param>
         /// <param name="actStatus">AP status handler</param>
         /// <param name="actData">AP data handler</param>
-        public MQTT(ConnInfo info, Action<string, ApStatus> actStatus, Action<ApData> actData, Action<string, EndPoint> actClient)
+        public MQTT(ConnInfo info, Action<string, string, ApStatus> actStatus, Action<ApData> actData)
         {
             Connection = info;
             ApStatusHandler = actStatus;
             ApDataHandler = actData;
-            ClientHandler = actClient;
         }
 
         /// <summary>
@@ -81,8 +79,7 @@ namespace Demo_Common.Service
         /// <returns></returns>
         private Task ClientConnectedAsync(ClientConnectedEventArgs arg)
         {
-            ApStatusHandler(arg.ClientId, ApStatus.Online);
-            ClientHandler(arg.ClientId, arg.RemoteEndPoint);
+            ApStatusHandler(arg.ClientId, arg.RemoteEndPoint.ToString() ?? string.Empty, ApStatus.Online);
             Log.Information($"{arg.ClientId}({arg.RemoteEndPoint}) connected");
             return Task.CompletedTask;
         }
@@ -94,7 +91,7 @@ namespace Demo_Common.Service
         /// <returns>The task</returns>
         private Task ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
         {
-            ApStatusHandler(arg.ClientId, ApStatus.Offline);
+            ApStatusHandler(arg.ClientId, arg.RemoteEndPoint.ToString() ?? string.Empty, ApStatus.Offline);
             Log.Warning($"{arg.ClientId}({arg.RemoteEndPoint}) disconnected");
             return Task.CompletedTask;
         }
@@ -116,7 +113,7 @@ namespace Demo_Common.Service
                 mqttServer.SubscribeAsync(arg.ClientId, $"/estation/{arg.ClientId}/message");
                 mqttServer.SubscribeAsync(arg.ClientId, $"/estation/{arg.ClientId}/heartbeat");
                 mqttServer.SubscribeAsync(arg.ClientId, $"/estation/{arg.ClientId}/result");
-                ApStatusHandler(arg.ClientId, ApStatus.Connecting);
+                ApStatusHandler(arg.ClientId, arg.RemoteEndPoint.ToString() ?? string.Empty, ApStatus.Connecting);
             }
 
             Log.Information($"{arg.ClientId}({arg.RemoteEndPoint}) validating connection:{arg.ReasonCode}");

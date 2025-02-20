@@ -3,11 +3,11 @@
 namespace Demo_WPF.View
 {
     /// <summary>
-    /// Interaction logic for ucTagList.xaml
+    /// Interaction logic for ucApConfig.xaml
     /// </summary>
-    public partial class ucTagList : UserControl
+    public partial class ucApConfig : UserControl
     {
-        public ucTagList()
+        public ucApConfig()
         {
             InitializeComponent();
         }

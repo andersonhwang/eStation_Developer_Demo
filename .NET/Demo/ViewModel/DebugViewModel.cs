@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Demo_WPF.ViewModel
 {
-    internal class ConnectionViewModel
+    internal class DebugViewModel
     {
     }
 }

@@ -5,10 +5,9 @@ namespace Demo_Common.Enum
     /// </summary>
     public enum ApStatus
     {
-        Init,
         Connecting,
         Online,
         Offline,
-        Working,
+        Init
     }
 }

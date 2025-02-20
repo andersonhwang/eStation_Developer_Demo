@@ -1,75 +1,68 @@
+using Demo_Common.Entity;
+using System.ComponentModel;
+
 namespace Demo_WPF.Model
 {
     /// <summary>
     /// Connection configuration
     /// </summary>
-    public class ApConfig : ModelBase
+    public class ApConfigModel : ApConfig, INotifyPropertyChanged
     {
-        private string alias = string.Empty;
-        private string serverAddress = "192.168.4.92";
-        private string userName = "test";
-        private string password = "123456";
-        private bool encrypted = false;
-        private int port = 9071;
-        private bool autoIP = true;
-        private string localIP = string.Empty;
-        private string subnet = string.Empty;
-        private string gateway = string.Empty;
-        private int heartbeat = 15;
-        private int speed = 15;
-        private string token = string.Empty;
-
+        /// <summary>
+        /// AP ID
+        /// </summary>
+        public string Id { get; set; } = string.Empty;
         /// <summary>
         /// Alias
         /// </summary>
-        public string Alias { get => alias; set { alias = value; NotifyPropertyChanged(nameof(Alias)); } }
+        public string AliasM { get => Alias; set { Alias = value; NotifyPropertyChanged(nameof(AliasM)); } }
         /// <summary>
         /// Server address
         /// </summary>
-        public string ServerAddress { get => serverAddress; set { serverAddress = value; NotifyPropertyChanged(nameof(ServerAddress)); } }
+        public string ServerM { get => Server; set { Server = value; NotifyPropertyChanged(nameof(ServerM)); } }
         /// <summary>
         /// User name
         /// </summary>
-        public string UserName { get => userName; set { userName = value; NotifyPropertyChanged(nameof(UserName)); } }
+        public string UserName
+        {
+            get => ConnParam.Length == 2 ? ConnParam[0] : string.Empty;
+            set { ConnParam[0] = value; NotifyPropertyChanged(nameof(UserName)); }
+        }
         /// <summary>
         /// Password
         /// </summary>
-        public string Password { get => password; set { password = value; NotifyPropertyChanged(nameof(Password)); } }
+        public string Password
+        {
+            get => ConnParam.Length == 2 ? ConnParam[1] : string.Empty;
+            set { ConnParam[1] = value; NotifyPropertyChanged(nameof(Password)); }
+        }
         /// <summary>
         /// Use TLS12
         /// </summary>
-        public bool Encrypted { get => encrypted; set { encrypted = value; NotifyPropertyChanged(nameof(Encrypted)); } }
-        /// <summary>
-        /// Port
-        /// </summary>
-        public int Port { get => port; set { port = value; NotifyPropertyChanged(nameof(Port)); } }
+        public bool EncryptM { get => Encrypt; set { Encrypt = value; NotifyPropertyChanged(nameof(EncryptM)); } }
         /// <summary>
         /// Auto IP
         /// </summary>
-        public bool AutoIP { get => autoIP; set { autoIP = value; NotifyPropertyChanged(nameof(AutoIP)); } }
+        public bool AutoIPM { get => AutoIP; set { AutoIP = value; NotifyPropertyChanged(nameof(AutoIPM)); } }
         /// <summary>
         /// Local IP
         /// </summary>
-        public string LocalIP { get => localIP; set { localIP = value; NotifyPropertyChanged(nameof(LocalIP)); } }
+        public string LocalIPM { get => LocalIP; set { LocalIP = value; NotifyPropertyChanged(nameof(LocalIPM)); } }
         /// <summary>
         /// Subnet mask
         /// </summary>
-        public string Subnet { get => subnet; set { subnet = value; NotifyPropertyChanged(nameof(Subnet)); } }
+        public string SubnetM { get => Subnet; set { Subnet = value; NotifyPropertyChanged(nameof(SubnetM)); } }
         /// <summary>
         /// Gateway
         /// </summary>
-        public string Gateway { get => gateway; set { gateway = value; NotifyPropertyChanged(nameof(Gateway)); } }
+        public string GatewayM { get => Gateway; set { Gateway = value; NotifyPropertyChanged(nameof(GatewayM)); } }
         /// <summary>
         /// Heartbeat speend, >= 15 seconds
         /// </summary>
-        public int Heartbeat { get => heartbeat; set { heartbeat = value; NotifyPropertyChanged(nameof(Heartbeat)); } }
-        /// <summary>
-        /// Broadcast speed, >= 2 seconds
-        /// </summary>
-        public int Speed { get => speed; set { speed = value; NotifyPropertyChanged(nameof(Speed)); } }
-        /// <summary>
-        /// Token
-        /// </summary>
-        public string Token { get => token; set { token = value; NotifyPropertyChanged(nameof(Token)); } }
+        public int HeartbeatM { get => Heartbeat; set { Heartbeat = value; NotifyPropertyChanged(nameof(HeartbeatM)); } }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void NotifyPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -9,6 +9,11 @@ namespace Demo_WPF.Model
     /// </summary>
     public class ConnInfoModel : ConnInfo, INotifyPropertyChanged
     {
+        private int apPort = 9070;
+        /// <summary>
+        /// AP port, default is 9070
+        /// </summary>
+        public int ApPort { get => apPort; set { apPort = value; NotifyPropertyChanged(nameof(ApPort)); } }
         /// <summary>
         /// Port
         /// </summary>

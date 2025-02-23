@@ -11,7 +11,7 @@ mc:Ignorable="d" >
     <UserControl.DataContext>
         <vm:ApConfigViewModel/>
     </UserControl.DataContext>
-    <GroupBox Header="配置参数">
+    <GroupBox Header="{Binding Config.Id}">
         <Grid h:GridHelper.LineBrush="Black" h:GridHelper.ShowBorder="True" h:GridHelper.LineThickness="0.5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>

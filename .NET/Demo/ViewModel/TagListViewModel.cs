@@ -228,7 +228,7 @@ namespace Demo_WPF.ViewModel
             switch (obj.ToString())
             {
                 case "E":
-                    var dialog = new TagsWindow(Tags.Select(x => x.ID).ToList());
+                    var dialog = new winTags(Tags.Select(x => x.ID).ToList());
                     dialog.ShowDialog();
                     LoadTags();
                     break;

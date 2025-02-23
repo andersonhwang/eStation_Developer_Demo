@@ -9,7 +9,7 @@ namespace Demo_WPF
     /// <summary>
     /// Interaction logic for TagsWindow.xaml
     /// </summary>
-    public partial class TagsWindow : Window
+    public partial class winTags : Window
     {
         private readonly List<string> _tagIDList = [];
 
@@ -20,7 +20,7 @@ namespace Demo_WPF
         /// Constructor
         /// </summary>
         /// <param name="list">Tags ID list</param>
-        public TagsWindow(List<string> list)
+        public winTags(List<string> list)
         {
             InitializeComponent();
             Owner = Application.Current.MainWindow;

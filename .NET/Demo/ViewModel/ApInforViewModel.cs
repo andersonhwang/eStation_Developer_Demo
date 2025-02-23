@@ -43,7 +43,8 @@ namespace Demo_WPF.ViewModel
                 SendTimeM = ap.SendTime,
                 ReceiveTimeM = ap.ReceiveTime,
                 ConnectTimeM = ap.ConnectTime,
-                DisconnectTimeM = ap.DisconnectTime
+                DisconnectTimeM = ap.DisconnectTime,
+                Infor = ap.Infor
             };
         }
 
@@ -52,14 +53,14 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private bool CanOTA(object arg) => IsConnect;
+        private bool CanOTA(object arg) => AP is not null && AP.IsConnect;
 
         /// <summary>
         /// Can config
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private bool CanConfig(object arg) => IsConnect;
+        private bool CanConfig(object arg) => AP is not null && AP.IsConnect;
 
         /// <summary>
         /// Do OTA
@@ -67,7 +68,7 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoOTA(object obj)
         {
-            var ota = new OTAWindow();
+            var ota = new winOTA();
             ota.ShowDialog();
         }
 
@@ -77,7 +78,7 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoConfig(object obj)
         {
-            var config = new ConfigWindow(ap.Id, ap);
+            var config = new winConfig(ap.Id, ap.Infor);
             config.ShowDialog();
         }
     }

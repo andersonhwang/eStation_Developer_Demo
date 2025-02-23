@@ -10,13 +10,18 @@ namespace Demo_WPF.ViewModel
 {
     internal class ApConnectViewModel : ViewModelBase
     {
-        private string port = "9071";
+        private string webPort = "9070";
+        private string apPort = "9071";
         private ConnInfoModel conn = new();
 
         /// <summary>
-        /// Port
+        /// Web port
         /// </summary>
-        public string Port { get { return port; } set { port = value; NotifyPropertyChanged(nameof(Port)); } }
+        public string WebPort { get { return webPort; } set { webPort = value; NotifyPropertyChanged(nameof(WebPort)); } }
+        /// <summary>
+        /// AP port
+        /// </summary>
+        public string ApPort { get { return apPort; } set { apPort = value; NotifyPropertyChanged(nameof(ApPort)); } }
         /// <summary>
         /// AP information
         /// </summary>
@@ -50,7 +55,7 @@ namespace Demo_WPF.ViewModel
         /// Check check
         /// </summary>
         /// <returns></returns>
-        private bool CanCheck(object obj) => !string.IsNullOrEmpty(Port);
+        private bool CanCheck(object obj) => obj.ToString() == "W" ? !string.IsNullOrEmpty(WebPort) : !string.IsNullOrEmpty(ApPort);
 
         /// <summary>
         /// Do check
@@ -58,7 +63,14 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoCheck(object obj)
         {
-            if (Check() > 0)
+            var check = obj.ToString() switch
+            {
+                "W" => CheckPort(WebPort, "Web"),
+                "A" => CheckPort(ApPort, "AP"),
+                _ => 0,
+            };
+
+            if (check > 0)
             {
                 MsgHelper.Infor($"Port {Conn.Port} is avaliable");
             }
@@ -80,10 +92,16 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoRun(object obj)
         {
-            var result = Check();
-            if (result > 0)
+            var web = CheckPort(WebPort, "Web");
+            if (web > 0)
             {
-                Conn.Port = result;
+                WebService.Instance.Run(web);
+            }
+
+            var ap = CheckPort(ApPort, "AP");
+            if (ap > 0)
+            {
+                Conn.Port = ap;
                 IsRun = SendService.Instance.Run(Conn);
             }
             if (IsRun)
@@ -105,31 +123,33 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoCertificate(object obj)
         {
-            var dialog = new CertificateWindow((path, key) => { Conn.Certificate = path; Conn.CertificateKeyM = key; });
+            var dialog = new winCertificate((path, key) => { Conn.Certificate = path; Conn.CertificateKeyM = key; });
             dialog.ShowDialog();
         }
 
         /// <summary>
-        /// Check connection information
+        /// Check port
         /// </summary>
+        /// <param name="port">Port number</param>
+        /// <param name="type">Port type</param>
         /// <returns>Check result</returns>
-        private int Check()
+        private int CheckPort(string port, string type)
         {
-            if (string.IsNullOrEmpty(Port))
+            if (string.IsNullOrEmpty(port))
             {
-                MsgHelper.Error("Port is mandatory");
+                MsgHelper.Error($"{type} port is mandatory");
                 return -1;
             }
 
-            if (!int.TryParse(Port, out int value))
+            if (!int.TryParse(port, out int value))
             {
-                MsgHelper.Error($"Invliad port {Port}");
+                MsgHelper.Error($"Invliad {type} port: {port}");
                 return 0;
             }
 
             if (value < 1000 || value > 0xFFFF)
             {
-                MsgHelper.Error($"Invliad port {value}");
+                MsgHelper.Error($"Invliad {type} port: {value}");
                 return 0;
             }
 
@@ -142,8 +162,12 @@ namespace Demo_WPF.ViewModel
             }
             catch (SocketException)
             {
-                MsgHelper.Error($"Port {value} is unavaliable");
+                MsgHelper.Error($"{type} port {value} is unavaliable");
                 return -2;
+            }
+            finally
+            {
+                listener.Dispose();
             }
         }
     }

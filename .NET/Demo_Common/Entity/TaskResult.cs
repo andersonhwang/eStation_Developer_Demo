@@ -19,7 +19,7 @@ namespace Demo_Common.Entity
         /// Total count in cache
         /// </summary>
         [Key(1)]
-        public int TotalCount { get; set; }
+        public int WaitCount { get; set; }
 
         /// <summary>
         /// Current sending count

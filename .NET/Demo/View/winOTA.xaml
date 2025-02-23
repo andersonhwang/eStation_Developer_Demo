@@ -1,0 +1,57 @@
+﻿<Window x:Class="Demo_WPF.winOTA"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Demo_WPF"
+        xmlns:h="clr-namespace:Demo_WPF.Helper"
+        xmlns:v="clr-namespace:Demo_WPF.View"
+        xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
+        xmlns:e="clr-namespace:Demo_Common.Enum;assembly=Demo_Common"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="Firmware" Height="170" Width="450" ResizeMode="NoResize" ShowInTaskbar="False"
+        h:DialogHelper.DialogResult="{Binding DialogResult}">
+    <Window.DataContext>
+        <vm:FirmwareViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ObjectDataProvider x:Key="OtaTypeDataSource" ObjectType="{x:Type e:OtaType}" MethodName="GetValues" >
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="e:OtaType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <Grid h:GridHelper.LineBrush="Black" h:GridHelper.ShowBorder="True" h:GridHelper.LineThickness="0.5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="OTA Type"/>
+        <ListView Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="lvEnum" ItemsSource="{Binding Source={StaticResource OtaTypeDataSource}}" SelectedItem="{Binding Data.TypeM}" >
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <RadioButton Content="{Binding}" GroupName="OtaType" IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem, Mode=FindAncestor}}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Firmware"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Data.NameM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Version"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Data.VersionM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="Browse" Command="{Binding CmdBrowse}"/>
+        <Button Grid.Row="3" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}" />
+        <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Content="OTA" Command="{Binding CmdOTA}"/>
+    </Grid>
+</Window>

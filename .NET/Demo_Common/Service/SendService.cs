@@ -15,7 +15,10 @@ namespace Demo_Common.Service
         private readonly object _locker = new();
         private readonly ConcurrentQueue<ApData> RecvQueue = [];
         private readonly Dictionary<string, Ap> Clients = [];
-        private string SelectAP = string.Empty;
+        /// <summary>
+        /// Current AP
+        /// </summary>
+        public string CurrentAP { get; private set; } = string.Empty;
         private MQTT mqtt;
         private static SendService instance = new();
         /// <summary>
@@ -89,7 +92,9 @@ namespace Demo_Common.Service
                                 await Task.Delay(200);
                                 continue;
                             }
+                            if(!Clients.ContainsKey(item.Id)) continue; 
 
+                            var ap = Clients[item.Id];
                             var json = string.Empty;
                             switch (item.TopicAlias)
                             {
@@ -109,12 +114,18 @@ namespace Demo_Common.Service
                                 case 0x82:
                                     var result = MessagePackSerializer.Deserialize<TaskResult>(item.Data);
                                     if (result is null) continue;
+                                    ap.ReceiveTime = DateTime.Now;
+                                    ap.SendCount = result.SendCount;
+                                    ap.WaitCount = result.WaitCount;
                                     json = JsonSerializer.Serialize(result);
                                     TaskResultHandler?.Invoke(item.Id, result);
                                     break;
                                 case 0x83:
                                     var heartbeat = MessagePackSerializer.Deserialize<ApHeartbeat>(item.Data);
                                     if (heartbeat is null) continue;
+                                    ap.HeartbeatTime = DateTime.Now;
+                                    ap.SendCount = heartbeat.SendCount;
+                                    ap.WaitCount = heartbeat.WaitCount;
                                     json = JsonSerializer.Serialize(heartbeat);
                                     ApHeartbeatHandler?.Invoke(item.Id, heartbeat);
                                     break;
@@ -122,6 +133,7 @@ namespace Demo_Common.Service
                                     break;
                             }
                             DebugResponseHandler?.Invoke(new DebugItem(item.TopicAlias, item.Topic, json));
+                            if(item.Id.Equals(CurrentAP)) SelectApHandler?.Invoke(ap);
                         }
                         catch
                         {
@@ -216,6 +228,7 @@ namespace Demo_Common.Service
                                 ap.DisconnectTime = DateTime.Now;
                                 break;
                         }
+                        if (id.Equals(CurrentAP)) SelectApHandler?.Invoke(ap);
                     }
                 }
                 ApStatusHandler?.Invoke(id, ip, status);
@@ -240,15 +253,15 @@ namespace Demo_Common.Service
         }
 
         /// <summary>
-        /// Select AP
+        /// Send data with current AP
         /// </summary>
-        /// <param name="id">AP ID</param>
-        public void SelectAp(string id)
-        {
-            if (!Clients.TryGetValue(id, out Ap? ap)) return;
-            SelectAP = id;
-            SelectApHandler?.Invoke(ap);
-        }
+        /// <typeparam name="T">Data type</typeparam>
+        /// <param name="alias">Topic alias</param>
+        /// <param name="topic">Topic</param>
+        /// <param name="t">Data object</param>
+        /// <returns>Send result</returns>
+        public async Task<SendResult> Send<T>(ushort alias, string topic, T t) =>
+            await Send(CurrentAP, alias, topic, t);
 
         /// <summary>
         /// Send data
@@ -269,6 +282,17 @@ namespace Demo_Common.Service
         }
 
         /// <summary>
+        /// Select AP
+        /// </summary>
+        /// <param name="id">AP ID</param>
+        public void SelectAp(string id)
+        {
+            if (!Clients.TryGetValue(id, out Ap? ap)) return;
+            CurrentAP = id;
+            SelectApHandler?.Invoke(ap);
+        }
+
+        /// <summary>
         /// Update AP infor
         /// </summary>
         /// <param name="id">AP ID</param>
@@ -280,8 +304,18 @@ namespace Demo_Common.Service
                 ap.Infor = infor;
                 ap.Firmware = infor.ApVersion;
                 ap.Mac = infor.MAC;
-                if (id.Equals(SelectAP)) SelectApHandler?.Invoke(ap);
+                if (id.Equals(CurrentAP)) SelectApHandler?.Invoke(ap);
             }
+        }
+
+        /// <summary>
+        /// Download confirm
+        /// </summary>
+        /// <param name="key">Firmware key</param>
+        /// <param name="id">AP ID</param>
+        internal void DownloadConfirm(string key, string id)
+        {
+            // TODO
         }
     }
 }

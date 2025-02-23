@@ -10,20 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Demo_WPF
+namespace Demo_WPF.View
 {
     /// <summary>
-    /// Interaction logic for CertificateWindow.xaml
+    /// Interaction logic for ucTagOTA.xaml
     /// </summary>
-    public partial class CertificateWindow : Window
+    public partial class ucTagOTA : UserControl
     {
-        public CertificateWindow(Action<string, string> action)
+        public ucTagOTA()
         {
             InitializeComponent();
-
-            Owner = Application.Current.MainWindow;
         }
     }
 }

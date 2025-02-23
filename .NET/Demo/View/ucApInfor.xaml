@@ -33,16 +33,16 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="ID"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AP.IDM, Mode=OneWay}" />
-            <Button Grid.Row="0" Grid.Column="2" Command="{Binding CmdConfig}" IsEnabled="{Binding AP.StatusM, Converter={StaticResource ApStatusBoolConverter}}" Content="Config"/>
+            <Button Grid.Row="0" Grid.Column="2" Command="{Binding CmdConfig}" IsEnabled="{Binding AP.IsConnect}" Content="Config"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="IP"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.IPM, Mode=OneWay}"/>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="MAC"/>
             <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.MACM, Mode=OneWay}" />
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Firmware"/>
             <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding AP.FirmwareM, Mode=OneWay}" />
-            <Button Grid.Row="3" Grid.Column="2" Command="{Binding CmdOTA}" IsEnabled="{Binding AP.StatusM, Converter={StaticResource ApStatusBoolConverter}}" Content="OTA"/>
+            <Button Grid.Row="3" Grid.Column="2" Command="{Binding CmdOTA}" IsEnabled="{Binding AP.IsConnect}" Content="Push"/>
             <TextBlock Grid.Row="4" Grid.Column="0" Text="Status"/>
-            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.StatusM, Converter={StaticResource ApStatusTextConverter}, Mode=TwoWay}" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.StatusM, Converter={StaticResource ApStatusTextConverter}, Mode=TwoWay}" Style="{StaticResource tbApStatus}"/>
             <TextBlock Grid.Row="5" Grid.Column="0" Text="Last Online"/>
             <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding AP.ConnectTimeM, Mode=OneWay, StringFormat={}{0:HH:mm:ss.fff}}" />
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Last Offline"/>

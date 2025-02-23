@@ -8,14 +8,8 @@ namespace Demo_WPF.ViewModel
     /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
-        private string selectAP = string.Empty;
         private bool isConnect = false;
         private bool isRun = false;
-
-        /// <summary>
-        /// Select AP ID
-        /// </summary>
-        public string SelectAP { get => selectAP; set { selectAP = value; NotifyPropertyChanged(nameof(SelectAP)); } }
 
         /// <summary>
         /// Select AP is connect
@@ -54,6 +48,35 @@ namespace Demo_WPF.ViewModel
         {
             get => dialogResult;
             set { dialogResult = value; NotifyPropertyChanged(nameof(DialogResult)); }
+        }
+
+        /// <summary>
+        /// Command - cancel
+        /// </summary>
+        public ICommand CmdCancel { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public DialogViewModelBase()
+        {
+            CmdCancel = new MyCommand(DoCancel, CanCancel);
+        }
+
+        /// <summary>
+        /// Can cancel
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        protected bool CanCancel(object obj) => true;
+
+        /// <summary>
+        /// Do cancel
+        /// </summary>
+        /// <param name="obj"></param>
+        protected void DoCancel(object obj)
+        {
+            DialogResult = true;
         }
     }
 

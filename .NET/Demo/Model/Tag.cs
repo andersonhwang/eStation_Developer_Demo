@@ -1,4 +1,5 @@
 ﻿using Demo_Common.Enum;
+using Demo_Common.Helper;
 
 namespace Demo_WPF.Model
 {
@@ -29,7 +30,7 @@ namespace Demo_WPF.Model
         /// <summary>
         /// Tag type
         /// </summary>
-        public string TagType { get => "--"; }
+        public string TagType { get => TagHelper.GetTagType(id).Type; }
         /// <summary>
         /// Version
         /// </summary>

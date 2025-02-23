@@ -20,7 +20,7 @@ namespace Demo_WPF.Model
         /// <summary>
         /// Client status
         /// </summary>
-        public ApStatus StatusM { get => Status; set { Status = value; NotifyPropertyChanged(nameof(StatusM)); } }
+        public ApStatus StatusM { get => Status; set { Status = value; NotifyPropertyChanged(nameof(StatusM)); NotifyPropertyChanged(nameof(IsConnect)); } }
         /// <summary>
         /// EndPoint
         /// </summary>
@@ -57,6 +57,10 @@ namespace Demo_WPF.Model
         /// Send count
         /// </summary>
         public int SendCountM { get => SendCount; set { SendCount = value; NotifyPropertyChanged(nameof(SendCountM)); } }
+        /// <summary>
+        /// Is connect
+        /// </summary>
+        public bool IsConnect { get => Status.Equals(ApStatus.Online); }
 
         /// <summary>
         /// Constructor

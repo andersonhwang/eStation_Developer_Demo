@@ -13,6 +13,7 @@ namespace Demo_Common.Helper
     {
         private static readonly string FilePath = "TagType.json";
         private static readonly Dictionary<string, TagType> DicTypes = new();
+        public static readonly Regex RegTagID = new("^[0-9A-F]{12}$");
 
         /// <summary>
         /// Constructor
@@ -55,6 +56,11 @@ namespace Demo_Common.Helper
         }
 
         /// <summary>
+        /// Tag types
+        /// </summary>
+        public static List<TagType> TagTypes { get => DicTypes.Values.ToList(); }
+
+        /// <summary>
         /// Get tag type
         /// </summary>
         /// <param name="tagId"></param>
@@ -62,7 +68,7 @@ namespace Demo_Common.Helper
         public static TagType GetTagType(string tagId)
         {
             tagId = tagId.Trim().ToUpper();
-            if (Regex.IsMatch(tagId, "^[0-9A-F]{12}$"))
+            if (RegTagID.IsMatch(tagId))
                 if (DicTypes.ContainsKey(tagId[..2])) return DicTypes[tagId[..2]];
             return new TagType(string.Empty, 0, 0, "", ColorType.Black);
         }
@@ -134,6 +140,7 @@ namespace Demo_Common.Helper
             DicTypes.Add("89", new TagType("89", 800, 480, "ET0750-89", ColorType.BlackRedYellow));
             DicTypes.Add("8A", new TagType("8A", 880, 528, "ET0750-8A", ColorType.BlackRedYellow));
             DicTypes.Add("8B", new TagType("8B", 960, 640, "ET1020-8B", ColorType.BlackRedYellow));
+            DicTypes.Add("D0", new TagType("D0", 960, 640, "ET0240C-D0", ColorType.Black));
         }
     }
 }

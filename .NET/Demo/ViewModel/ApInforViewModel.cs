@@ -53,7 +53,7 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private bool CanOTA(object arg) => AP is not null && AP.IsConnect;
+        private bool CanOTA(object arg) => AP is not null && AP.IsConnect && WebService.Instance.IsRun;
 
         /// <summary>
         /// Can config

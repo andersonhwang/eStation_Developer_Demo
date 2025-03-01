@@ -9,11 +9,6 @@ namespace Demo_WPF.Model
     /// </summary>
     public class ConnInfoModel : ConnInfo, INotifyPropertyChanged
     {
-        private int apPort = 9070;
-        /// <summary>
-        /// AP port, default is 9070
-        /// </summary>
-        public int ApPort { get => apPort; set { apPort = value; NotifyPropertyChanged(nameof(ApPort)); } }
         /// <summary>
         /// Port
         /// </summary>
@@ -29,7 +24,11 @@ namespace Demo_WPF.Model
         /// <summary>
         /// Security, default is true
         /// </summary>
-        public bool EncryptM { get => Encrypt; set { Encrypt = value; NotifyPropertyChanged(nameof(EncryptM)); } }
+        public bool EncryptM { get => Encrypt; set { Encrypt = value; NotifyPropertyChanged(nameof(EncryptM2)); } }
+        /// <summary>
+        /// Security, default is true
+        /// </summary>
+        public bool EncryptM2 { get => !Encrypt;  }
         /// <summary>
         /// Certificate path
         /// </summary>

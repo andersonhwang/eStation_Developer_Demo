@@ -26,29 +26,29 @@ namespace Demo_Common.Entity
         [Key(3)]
         public bool B { get; set; }
         /// <summary>
-        /// Times
+        /// Period 闪烁时长, 0~3600, Default 3600
         /// </summary>
         [Key(4)]
-        public int Times { get; set; }
+        public int Period { get; set; } = 3600;
+        /// <summary>
+        /// Interval 亮灯间隔, 100~10000, Default 1000
+        /// </summary>
+        [Key(5)]
+        public int Interval { get; set; } = 1000;
+        /// <summary>
+        /// Duration 亮灯时长, 50~100, Default 50
+        /// </summary>
+        [Key(6)]
+        public int Duration { get; set; } = 50;
         /// <summary>
         /// Token
         /// </summary>
-        [Key(5)]
-        public int Token { get; set; }
-        /// <summary>
-        /// Interval 亮灯间隔
-        /// </summary>
-        [Key(6)]
-        public int Interval { get; set; } = 0;
-        /// <summary>
-        /// Duration 亮灯时长
-        /// </summary>
         [Key(7)]
-        public int Duration { get; set; } = 50;
+        public int Token { get; set; }
         /// <summary>
         /// 图像数据文件
         /// </summary>
         [Key(8)]
-        public byte[] HexData { get; set; } = Array.Empty<byte>();
+        public byte[] HexData { get; set; } = [];
     }
 }

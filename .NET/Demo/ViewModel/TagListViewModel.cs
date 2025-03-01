@@ -1,8 +1,11 @@
 ﻿using Demo_Common.Entity;
 using Demo_Common.Enum;
+using Demo_Common.Helper;
 using Demo_Common.Service;
 using Demo_WPF.Model;
+using Demo_WPF.View;
 using Serilog;
+using System.Collections.Frozen;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -10,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Demo_WPF.ViewModel
 {
@@ -17,10 +21,25 @@ namespace Demo_WPF.ViewModel
     {
         private readonly object _locker = new();
         private readonly string TagListPath = "TagList.txt";
+        private Random Random;
         private TagHeader header = new();
+        private int _count = 0;
+        private int token = 0;
         private bool isConnect = false;
         private ObservableCollection<Tag> tags = [];
         private ObservableCollection<ApModel> aps = [];
+        /// <summary>
+        /// Tags count
+        /// </summary>
+        public int Count { get => _count; set { _count = value; NotifyPropertyChanged(nameof(HeaderText)); } }
+        /// <summary>
+        /// Header text
+        /// </summary>
+        public string HeaderText => $"Tags List ({_count})";
+        /// <summary>
+        /// Token
+        /// </summary>
+        public int Token { get { if (++token >= 0xFFFF) token = 0; return token; } }
         /// <summary>
         /// Header
         /// </summary>
@@ -64,6 +83,7 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         public TagListViewModel()
         {
+            Random = new Random(DateTime.Now.Millisecond);
             LoadTags();
 
             CmdMenu = new MyCommand(DoMemu, CanMenu);
@@ -125,7 +145,7 @@ namespace Demo_WPF.ViewModel
                             {
                                 if (!header.AutoRegister) continue;
                                 tag = new Tag(item.TagId);
-                                Tags.Add(tag);
+                                AddTag(tag);
                                 add = true;
                             }
                             tag.HeartbeatCount++;
@@ -206,7 +226,12 @@ namespace Demo_WPF.ViewModel
         /// <param name="arg"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        private bool CanSelectAllTags(object arg) => Tags.Count > 0;
+        private bool CanSelectAllTags(object arg)
+        {
+            if (Tags.Count == 0) return false;
+            var first = Tags.First().ID[..2];
+            return Tags.All(x => x.ID[..2].Equals(first));
+        }
 
         /// <summary>
         /// Can send
@@ -215,7 +240,9 @@ namespace Demo_WPF.ViewModel
         /// <returns></returns>
         private bool CanSend(object arg)
         {
-            return true;
+            var select = Tags.Where(x => x.Select).Select(x => x);
+            var result = select.Any() && select.All(x => x.ID[..2].Equals(select.First().ID[..2]));
+            return Header.Same = result;
         }
 
         /// <summary>
@@ -261,7 +288,7 @@ namespace Demo_WPF.ViewModel
         /// <exception cref="NotImplementedException"></exception>
         private void DoSelectTag(object obj)
         {
-
+            SendService.Instance.SelectTags(Tags.Where(x => x.Select).Select(x => x.ID).ToArray());
         }
 
         /// <summary>
@@ -280,7 +307,19 @@ namespace Demo_WPF.ViewModel
         /// <param name="obj"></param>
         private void DoSend(object obj)
         {
-
+            var select = Tags.Where(x => x.Select).Select(x => x.ID);
+            var first = select.First();
+            if (first.StartsWith("D0"))
+            {
+                var dsl = new winTaskDSL(Token, select.ToArray(), SendHandler);
+                dsl.ShowDialog();
+            }
+            else
+            {
+                var type = TagHelper.GetTagType(first);
+                var esl = new winTaskESL(Token, select.ToArray(), SendHandler);
+                esl.ShowDialog();
+            }
         }
 
         /// <summary>
@@ -306,9 +345,50 @@ namespace Demo_WPF.ViewModel
                     var id = line.Trim().ToUpper();
                     if (!Regex.IsMatch(id, "^[0-9A-F]{12}$")) continue;
                     if (Tags.Any(x => x.ID.Equals(id))) continue;
-                    Tags.Add(new Tag(id));
+                    AddTag(new Tag(id));
+                }
+                if (Tags.Count > 0)
+                {
+                    var first = Tags.First().ID[..2];
+                    Header.Same = Tags.All(x => x.ID[..2].Equals(first));
                 }
             }
+        }
+
+        /// <summary>
+        /// Add tag
+        /// </summary>
+        /// <param name="id">Tag ID</param>
+        private void AddTag(Tag tag)
+        {
+            Tags.Add(tag); 
+            Count = Tags.Count;
+            if (Header.Same && Tags.Count > 1)
+            {
+                if (!Tags.First().ID[..2].Equals(tag.ID[..2]))
+                {
+                    Header.Same = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Send handler
+        /// </summary>
+        /// <param name="tags">Tags</param>
+        private void SendHandler(string[] tags)
+        {
+            Dispatcher.CurrentDispatcher.Invoke(() =>
+            {
+                foreach (var tag in tags)
+                {
+                    var item = Tags.FirstOrDefault(x => x.ID.Equals(tag));
+                    if (item is null) continue;
+                    item.LastSend = DateTime.Now;
+                    item.Status = TagStatus.Sending;
+                    item.SendCount++;
+                }
+            });
         }
     }
 }

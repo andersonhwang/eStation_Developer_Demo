@@ -1,6 +1,8 @@
 ﻿using Demo_Common.Entity;
 using Demo_Common.Enum;
 using MessagePack;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.Extensions.ObjectPool;
 using Serilog;
 using System.Collections.Concurrent;
 using System.Text.Json;
@@ -61,17 +63,22 @@ namespace Demo_Common.Service
         /// <summary>
         /// Debug request delegate
         /// </summary>
+        /// <param name="request">True is from server side, false is from ap side</param>
         /// <param name="item">Debug item</param>
-        public delegate void DebugRequestDelegate(DebugItem item);
-        public event DebugRequestDelegate? DebugRequestHandler;
+        public delegate void DebugDelegate(bool request, DebugItem item);
+        public event DebugDelegate? DebugHandler;
         /// <summary>
-        /// Debug response delegate
+        /// Select AP handler
         /// </summary>
-        /// <param name="item">Debug item</param>
-        public delegate void DebugResponseDelegate(DebugItem item);
-        public event DebugResponseDelegate? DebugResponseHandler;
+        /// <param name="ap"></param>
         public delegate void SelectApDelegate(Ap ap);
         public event SelectApDelegate? SelectApHandler;
+        /// <summary>
+        /// Select tags handler
+        /// </summary>
+        /// <param name="tags"></param>
+        public delegate void SeletcTagDelegate(string[] tags);
+        public event SeletcTagDelegate? SelectTagHandler;
 
         /// <summary>
         /// Run send service
@@ -96,7 +103,16 @@ namespace Demo_Common.Service
 
                             var ap = Clients[item.Id];
                             var json = string.Empty;
-                            switch (item.TopicAlias)
+                            var alias = item.TopicAlias;
+                            // Previous
+                            if(alias == 0)
+                            {
+                                if (item.Topic.EndsWith("infor")) alias = 0x80;
+                                else if (item.Topic.EndsWith("message")) alias = 0x81;
+                                else if (item.Topic.EndsWith("result")) alias = 0x82;
+                                else if (item.Topic.EndsWith("heartbeat")) alias = 0x83;
+                            }
+                            switch (alias)
                             {
                                 case 0x80:
                                     var infor = MessagePackSerializer.Deserialize<ApInfor>(item.Data);
@@ -132,7 +148,7 @@ namespace Demo_Common.Service
                                 default:
                                     break;
                             }
-                            DebugResponseHandler?.Invoke(new DebugItem(item.TopicAlias, item.Topic, json));
+                            DebugHandler?.Invoke(false, new DebugItem(item, json));
                             if(item.Id.Equals(CurrentAP)) SelectApHandler?.Invoke(ap);
                         }
                         catch
@@ -183,22 +199,22 @@ namespace Demo_Common.Service
         public void Register(TaskResultDelegate result) => TaskResultHandler += result;
 
         /// <summary>
-        /// Register debug response event
-        /// </summary>
-        /// <param name="debug">Debug response event</param>
-        public void Register(DebugResponseDelegate debug) => DebugResponseHandler += debug;
-
-        /// <summary>
         /// Register debug request event
         /// </summary>
         /// <param name="debug">Debug request event</param>
-        public void Register(DebugRequestDelegate debug) => DebugRequestHandler += debug;
+        public void Register(DebugDelegate debug) => DebugHandler += debug;
 
         /// <summary>
         /// Register select client event
         /// </summary>
         /// <param name="ap"></param>
         public void Register(SelectApDelegate ap) => SelectApHandler += ap;
+
+        /// <summary>
+        /// Register select tag event
+        /// </summary>
+        /// <param name="tag">Tags ID array</param>
+        public void Register(SeletcTagDelegate tag) => SelectTagHandler += tag;
 
         /// <summary>
         /// AP status handler
@@ -277,8 +293,8 @@ namespace Demo_Common.Service
             if (!Clients.TryGetValue(id, out Ap? client)) return SendResult.NotExist;
             if (client.Status != ApStatus.Online) return SendResult.Offline;
 
-            DebugRequestHandler?.Invoke(new DebugItem(alias, topic, JsonSerializer.Serialize(t)));
-            return await mqtt.Send(alias, topic, t);
+            DebugHandler?.Invoke(true, new DebugItem(id, alias, topic, JsonSerializer.Serialize(t)));
+            return await mqtt.Send(alias, $"/estation/{id}/{topic}", t);
         }
 
         /// <summary>
@@ -290,6 +306,15 @@ namespace Demo_Common.Service
             if (!Clients.TryGetValue(id, out Ap? ap)) return;
             CurrentAP = id;
             SelectApHandler?.Invoke(ap);
+        }
+
+        /// <summary>
+        /// Select tags
+        /// </summary>
+        /// <param name="ids">Tags ID</param>
+        public void SelectTags(string[] ids)
+        {
+            SelectTagHandler?.Invoke(ids);
         }
 
         /// <summary>

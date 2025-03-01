@@ -1,43 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Demo_WPF.Model
+﻿namespace Demo_WPF.Model
 {
-    internal class DebugInfo
+    public class DebugInfo : ModelBase
     {
-    }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="id">ID</param>
-    /// <param name="topic">Topic</param>
-    /// <param name="data">Data</param>
-    internal class DebugItem(string id, string topic, string data)
-    {
-        private DateTime _time = DateTime.Now;
-        private string _topic = topic;
-        private string _id = id;
-        private string _data = data;
-
+        private int index = -1;
+        private bool request = true;
+        private string header = string.Empty;
+        private string description = string.Empty;
         /// <summary>
-        /// Time
+        /// Select index
         /// </summary>
-        public DateTime Time { get => _time; }
+        public int Index { get { return index; } set { index = value; NotifyPropertyChanged(nameof(Index)); } }
         /// <summary>
-        /// Name
+        /// Request
         /// </summary>
-        public string Id { get => _id; }
+        public bool Request { get => request; set => request = value; }
         /// <summary>
-        /// Code
+        /// Header
         /// </summary>
-        public string Topic { get => _topic; }
+        public string Header { get => header; set { header = value; NotifyPropertyChanged(nameof(Header)); } }
         /// <summary>
-        /// Data
+        /// Description
         /// </summary>
-        public string Data { get => _data; }
+        public string Description { get => description; set { description = value; NotifyPropertyChanged(nameof(Description)); } }
     }
 }

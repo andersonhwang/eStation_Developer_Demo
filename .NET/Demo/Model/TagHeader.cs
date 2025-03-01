@@ -4,7 +4,7 @@
     {
         private bool autoRegister = false;
         private bool onlyData = false;
-        private bool same = false;
+        private bool same = true;
         private bool select = false;
         private string ap = string.Empty;
 

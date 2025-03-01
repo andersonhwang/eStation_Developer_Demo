@@ -16,15 +16,25 @@ namespace Demo_Common.Service
         /// Instance of WebService
         /// </summary>
         public static WebService Instance => instance;
+        /// <summary>
+        /// Is run
+        /// </summary>
+        public bool IsRun { get; private set; }
+        /// <summary>
+        /// IP address
+        /// </summary>
+        public string IP { get; private set; }
 
         /// <summary>
         /// Run web service
         /// </summary>
+        /// <param name="ip">IP address</param>
         /// <param name="port">Web port</param>
-        public void Run(int port)
+        public void Run(string ip, int port)
         {
             try
             {
+                if (IsRun) return;
                 var builder = WebApplication.CreateBuilder();
                 builder.Services.AddEndpointsApiExplorer();
 
@@ -54,10 +64,13 @@ namespace Demo_Common.Service
                     return Results.Ok(id);
                 }).WithName("Confirm");
                 app.RunAsync($"http://*:{port}");
+                IsRun = true;
+                IP = $"{ip}:{port}";
             }
             catch (Exception e)
             {
                 Log.Error(e, "Web_Svc_Err");
+                IsRun = false;
                 throw;
             }
         }

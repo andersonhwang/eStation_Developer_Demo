@@ -11,7 +11,7 @@
     <UserControl.DataContext>
         <vm:ApConnectViewModel/>
     </UserControl.DataContext>
-    <GroupBox Header="Start Service">
+    <GroupBox Header="Start MQTT Service">
         <Grid h:GridHelper.LineBrush="Black" h:GridHelper.ShowBorder="True" h:GridHelper.LineThickness="0.5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -24,31 +24,24 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Network"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Web Port"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding WebPort}" MaxLength="5"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="Check" Command="{Binding CmdCheck}" CommandParameter="W" IsEnabled="{Binding IsRun, Converter={StaticResource BoolConverter}}"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="AP Port "/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ApPort}" MaxLength="5"/>
-            <Button Grid.Row="1" Grid.Column="2" Content="Check" Command="{Binding CmdCheck}" CommandParameter="A" IsEnabled="{Binding IsRun, Converter={StaticResource BoolConverter}}"/>
-            <TextBlock Grid.Row="2" Grid.Column="0"  Text="User Name"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Conn.UserNameM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Row="3" Grid.Column="0"  Text="Password"/>
-            <PasswordBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" h:PwdBoxHelper.Attach="True" h:PwdBoxHelper.Password="{Binding Conn.PasswordM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <CheckBox Grid.Row="4" Grid.Column="0"  Name="chkSecurity" Content="TSL12" 
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="AP Port "/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Port}" MaxLength="5"/>
+            <Button Grid.Row="0" Grid.Column="2" Content="Check" Command="{Binding CmdCheck}" IsEnabled="{Binding IsRun, Converter={StaticResource BoolConverter}}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0"  Text="User Name"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Conn.UserNameM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0"  Text="Password"/>
+            <PasswordBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" h:PwdBoxHelper.Attach="True" h:PwdBoxHelper.Password="{Binding Conn.PasswordM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <CheckBox Grid.Row="3" Grid.Column="0"  Name="chkSecurity" Content="TSL12" 
                       IsChecked="{Binding Conn.EncryptM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <Label Grid.Row="4" Grid.Column="1">
+            <Label Grid.Row="3" Grid.Column="1">
                 <Hyperlink x:Name="lnkX509" IsEnabled="{Binding Conn.EncryptM}" Command="{Binding CmdCertificate}">
                     <TextBlock Text="{Binding Conn.CertificateNameM}"/>
                 </Hyperlink>
             </Label>
-            <Button Grid.Row="4" Grid.Column="2" x:Name="btnBrowse" Content="Browse" IsEnabled="{Binding ElementName=chkSecurity, Path=IsChecked}" Command="{Binding CmdCertificate}"/>
-            <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="需要基站配置为加密连接模式" Visibility="{Binding Conn.EncryptM, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"/>
-            <Button Grid.Row="5" Grid.Column="2"  Content="Run" Command="{Binding CmdRun}" IsEnabled="{Binding IsRun, Converter={StaticResource BoolConverter}}"/>
+            <Button Grid.Row="3" Grid.Column="2" x:Name="btnBrowse" Content="Browse" IsEnabled="{Binding ElementName=chkSecurity, Path=IsChecked}" Command="{Binding CmdCertificate}"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="※ Need ApConfig.Encrypt=True" Visibility="{Binding Conn.EncryptM2, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"/>
+            <Button Grid.Row="4" Grid.Column="2"  Content="Run" Command="{Binding CmdRun}" IsEnabled="{Binding IsRun, Converter={StaticResource BoolConverter}}"/>
         </Grid>
     </GroupBox>
 </UserControl>

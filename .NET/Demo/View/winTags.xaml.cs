@@ -1,7 +1,7 @@
-﻿using Demo_WPF.Helper;
+﻿using Demo_Common.Helper;
+using Demo_WPF.Helper;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace Demo_WPF
@@ -55,14 +55,13 @@ namespace Demo_WPF
         {
             try
             {
-                var reg = new Regex("^[0-9A-F]{12}$");
                 var hash = new HashSet<string>();
                 var items = txtIDList.Text.Trim().ToUpper().Split('\r');
                 var builder = new StringBuilder();
                 foreach (var item in items)
                 {
                     var id = item.Trim('\n');
-                    if (!reg.IsMatch(id) || hash.Contains(id)) continue;
+                    if (!TagHelper.RegTagID.IsMatch(id) || hash.Contains(id)) continue;
                     hash.Add(id);
                     builder.AppendLine(id);
                 }

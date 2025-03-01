@@ -1,10 +1,15 @@
 ﻿namespace Demo_WPF.Model
 {
-    internal class TaskESL : TaskBase
+    public class TaskESL : TaskBase
     {
+        protected int times = 60;
         private string oldKey = string.Empty;
         private string newKey = string.Empty;
 
+        /// <summary>
+        /// Times
+        /// </summary>
+        public int Times { get => times; set { times = value; NotifyPropertyChanged(nameof(Times)); } }
         /// <summary>
         /// Old key
         /// </summary>

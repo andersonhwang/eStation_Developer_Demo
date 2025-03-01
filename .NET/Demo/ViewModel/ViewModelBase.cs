@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using Demo_WPF.Helper;
+using System.ComponentModel;
+using System.Net.Sockets;
+using System.Net;
 using System.Windows.Input;
 
 namespace Demo_WPF.ViewModel
@@ -33,6 +36,89 @@ namespace Demo_WPF.ViewModel
         /// <param name="propertyName">Property name</param>
         public void NotifyPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    /// <summary>
+    /// View model with TCP port check
+    /// </summary>
+    public class TcpViewModelBase : ViewModelBase
+    {
+        private string port = "9071";
+        /// <summary>
+        /// AP port
+        /// </summary>
+        public string Port { get { return port; } set { port = value; NotifyPropertyChanged(nameof(Port)); } }
+
+        /// <summary>
+        /// Command - Check
+        /// </summary>
+        public ICommand CmdCheck { get; set; }
+
+        public TcpViewModelBase()
+        {
+            CmdCheck = new MyCommand(DoCheck, CanCheck);
+        }
+
+        /// <summary>
+        /// Check check
+        /// </summary>
+        /// <returns></returns>
+        private bool CanCheck(object obj) => !string.IsNullOrEmpty(Port);
+
+        /// <summary>
+        /// Do check
+        /// </summary>
+        /// <param name="obj"></param>
+        private void DoCheck(object obj)
+        {
+            if (CheckPort() > 0)
+            {
+                MsgHelper.Infor($"Port {Port} is avaliable");
+            }
+        }
+
+        /// <summary>
+        /// Check port
+        /// </summary>
+        /// <param name="port">Port number</param>
+        /// <returns>Check result</returns>
+        protected int CheckPort()
+        {
+            if (string.IsNullOrEmpty(Port))
+            {
+                MsgHelper.Error($"Port is mandatory");
+                return -1;
+            }
+
+            if (!int.TryParse(port, out int value))
+            {
+                MsgHelper.Error($"Invliad port: {Port}");
+                return 0;
+            }
+
+            if (value < 1000 || value > 0xFFFF)
+            {
+                MsgHelper.Error($"Invliad port: {value}");
+                return 0;
+            }
+
+            var listener = new TcpListener(IPAddress.Any, value);
+            try
+            {
+                listener.Start();
+                listener.Stop();
+                return value;
+            }
+            catch (SocketException)
+            {
+                MsgHelper.Error($"Port {value} is unavaliable");
+                return -2;
+            }
+            finally
+            {
+                listener.Dispose();
+            }
+        }
     }
 
     /// <summary>

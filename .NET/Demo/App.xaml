@@ -12,6 +12,9 @@
             <c:BoolConverter x:Key="BoolConverter"/>
             <c:TagStatusConverter x:Key="TagStatusConverter"/>
             <c:VisibilityConverter x:Key="VisibilityConverter"/>
+            <Style TargetType="ComboBox">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
             <Style TargetType="CheckBox">
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>

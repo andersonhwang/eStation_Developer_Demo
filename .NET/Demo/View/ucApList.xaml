@@ -11,7 +11,7 @@ xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
     <UserControl.DataContext>
         <vm:ApListViewModel/>
     </UserControl.DataContext>
-    <GroupBox Header="AP List">
+    <GroupBox Header="{Binding Header}">
         <DataGrid x:Name="dgAPList" ItemsSource="{Binding APs}" SelectedItem="{Binding SelectAP}" SelectionMode="Single" SelectionUnit="FullRow"
                   AllowDrop="False" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="True">
             <DataGrid.Columns>

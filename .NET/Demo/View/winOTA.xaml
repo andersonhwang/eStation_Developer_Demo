@@ -9,7 +9,7 @@
         xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
         xmlns:e="clr-namespace:Demo_Common.Enum;assembly=Demo_Common"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="Firmware" Height="170" Width="450" ResizeMode="NoResize" ShowInTaskbar="False"
+        Title="Firmware" Height="210" Width="450" ResizeMode="NoResize" ShowInTaskbar="False"
         h:DialogHelper.DialogResult="{Binding DialogResult}">
     <Window.DataContext>
         <vm:FirmwareViewModel/>
@@ -27,6 +27,8 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -34,7 +36,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="OTA Type"/>
-        <ListView Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="lvEnum" ItemsSource="{Binding Source={StaticResource OtaTypeDataSource}}" SelectedItem="{Binding Data.TypeM}" >
+        <ListView Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="lvEnum" ItemsSource="{Binding Source={StaticResource OtaTypeDataSource}}" SelectedItem="{Binding Data.TypeM}" VerticalContentAlignment="Center">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
@@ -46,12 +48,16 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Firmware"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Data.NameM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Version"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Data.VersionM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Grid.Row="2" Grid.Column="2" Content="Browse" Command="{Binding CmdBrowse}"/>
-        <Button Grid.Row="3" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}" />
-        <Button Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Content="OTA" Command="{Binding CmdOTA}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Tag Type"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding TagTypes}" DisplayMemberPath="Type" SelectedValuePath="Code" SelectedValue="{Binding Data.TagType}" Visibility="{Binding Data.IsAP, Converter={StaticResource VisibilityConverter}}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Firmware"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Data.NameM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Version"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Data.VersionM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Row="3" Grid.Column="2" Content="Browse" Command="{Binding CmdBrowse}"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="MD5"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Data.MD5M}" IsReadOnly="True"/>
+        <Button Grid.Row="5" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}" />
+        <Button Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Content="Push" Command="{Binding CmdOTA}"/>
     </Grid>
 </Window>

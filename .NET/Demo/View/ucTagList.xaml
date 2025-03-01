@@ -11,22 +11,26 @@ xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
     <UserControl.DataContext>
         <vm:TagListViewModel/>
     </UserControl.DataContext>
-    <GroupBox Header="Tag List">
+    <GroupBox Header="{Binding HeaderText}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" HorizontalAlignment="Right" FlowDirection="LeftToRight" Orientation="Horizontal">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" FlowDirection="LeftToRight" Orientation="Horizontal">
+                <TextBlock/>
                 <CheckBox Content="Auto Register" IsChecked="{Binding DataContext.Header.AutoRegister, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}" />
                 <CheckBox Content="Only Data" IsChecked="{Binding DataContext.Header.OnlyData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}" />
-                <TextBlock Text="AP"/>
-                <ComboBox ItemsSource="{Binding DataContext.APs, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}" 
-                      SelectedValue="{Binding DataContext.Header.AP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}" 
-                      DisplayMemberPath="IDM" SelectedValuePath="IDM" />
-                <Button Content="Send" IsEnabled="{Binding IsConnect}" Command="{Binding DataContext.CmdSend, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}"/>
             </StackPanel>
-            <DataGrid Grid.Row="1" x:Name="gdTagList" ItemsSource="{Binding Tags}" AllowDrop="False" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="True">
+            <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" FlowDirection="LeftToRight" Orientation="Horizontal">
+                <TextBlock Text="※ Only the same type of tag can be selected each time" Visibility="{Binding Header.Same, Converter={StaticResource VisibilityConverter}}"/>
+                <Button Content="Send" Command="{Binding DataContext.CmdSend, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}" Width="80"/>
+            </StackPanel>
+            <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="gdTagList" ItemsSource="{Binding Tags}" AllowDrop="False" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="True">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn SortMemberPath="ID">
                         <DataGridTemplateColumn.Header>
@@ -37,7 +41,7 @@ xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox Content="{Binding ID}" IsChecked="{Binding Select, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="{Binding ID}" IsChecked="{Binding Select, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Command="{Binding DataContext.CmdSelectTag, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

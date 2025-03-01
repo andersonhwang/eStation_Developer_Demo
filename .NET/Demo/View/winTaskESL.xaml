@@ -1,0 +1,56 @@
+﻿<Window x:Class="Demo_WPF.winTaskESL"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Demo_WPF"
+        xmlns:h="clr-namespace:Demo_WPF.Helper"
+        xmlns:v="clr-namespace:Demo_WPF.View"
+        xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
+        xmlns:t="clr-namespace:Demo_WPF.Extension"
+        xmlns:e="clr-namespace:Demo_Common.Enum;assembly=Demo_Common"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Title="Publish Task" Height="250" Width="530"
+        h:DialogHelper.DialogResult="{Binding DialogResult}">
+    <Window.DataContext>
+        <vm:TaskEslViewModel/>
+    </Window.DataContext>
+    <Grid h:GridHelper.LineBrush="Black" h:GridHelper.ShowBorder="True" h:GridHelper.LineThickness="0.5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Tag Type"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Type.Type}"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="Image Size"/>
+        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Type.Size}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Image Path"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Esl.Path}"/>
+        <Button Grid.Row="1" Grid.Column="3" Content="Browse" Command="{Binding CmdBrowse}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="LED Color"/>
+        <CheckBox Grid.Row="2" Grid.Column="1" Content="Red" IsChecked="{Binding Esl.R, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox Grid.Row="2" Grid.Column="2" Content="Green" IsChecked="{Binding Esl.G, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox Grid.Row="2" Grid.Column="3" Content="Blue" IsChecked="{Binding Esl.B, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Times"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Esl.Times, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" h:TextBoxHelper.NumberOnly="True"/>
+        <TextBlock Grid.Row="3" Grid.Column="2" Text="Token"/>
+        <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Esl.Token, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="5" h:TextBoxHelper.NumberOnly="True"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Pattern"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={t:EnumSource {x:Type e:Pattern}}}" SelectedValue="{Binding Esl.Pattern}"/>
+        <TextBlock Grid.Row="4" Grid.Column="2" Text="Page Index"/>
+        <ComboBox Grid.Row="4" Grid.Column="3" ItemsSource="{Binding Source={t:EnumSource {x:Type e:PageIndex}}}" SelectedValue="{Binding Esl.PageIndex}"/>
+        <Button Grid.Row="5" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>
+        <Button Grid.Row="5" Grid.Column="2" Content="PublishESL" Command="{Binding CmdPublish}" CommandParameter="0"/>
+        <Button Grid.Row="5" Grid.Column="3" Content="PublishESL2" Command="{Binding CmdPublish}" CommandParameter="1"/>
+    </Grid>
+</Window>

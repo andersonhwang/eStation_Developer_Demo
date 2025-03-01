@@ -44,7 +44,7 @@ namespace Demo_WPF.ViewModel
         {
             try
             {
-                var result = await SendService.Instance.Send(config.Id, 0x01, $"/estation/{config.Id}/config", config as ApConfig);
+                var result = await SendService.Instance.Send(0x01, "configure", config as ApConfig);
                 if (result != SendResult.Success)
                 {
                     MsgHelper.Error("Config failed:" + result);

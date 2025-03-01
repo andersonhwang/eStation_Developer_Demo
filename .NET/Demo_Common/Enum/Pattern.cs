@@ -18,14 +18,6 @@ namespace Demo_Common.Enum
         /// </summary>
         Display,
         /// <summary>
-        /// Clean current tag screen
-        /// </summary>
-        Query,
-        /// <summary>
-        /// No change, just check tag if exist
-        /// </summary>
-        Check,
-        /// <summary>
         /// Only LED
         /// </summary>
         LED,

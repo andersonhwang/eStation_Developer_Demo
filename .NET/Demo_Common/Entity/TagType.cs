@@ -9,7 +9,7 @@ namespace Demo_Common.Entity
     /// <remarks>
     /// Constructor
     /// </remarks>
-    /// <param name="code">Type code
+    /// <param name="code">Type code</param>
     /// <param name="width">Width</param>
     /// <param name="height">Height</param>
     /// <param name="type">Type</param>
@@ -36,6 +36,10 @@ namespace Demo_Common.Entity
         /// Tag
         /// </summary>
         public string Type { get; private set; } = type;
+        /// <summary>
+        /// Size
+        /// </summary>
+        public string Size { get => $"{Width}x{Height}"; }
         /// <summary>
         /// Color
         /// </summary>

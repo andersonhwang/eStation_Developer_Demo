@@ -1,6 +1,5 @@
-﻿using MessagePack;
-using PageIndex = Demo_Common.Enum.PageIndex;
-using Pattern = Demo_Common.Enum.Pattern;
+﻿using Demo_Common.Enum;
+using MessagePack;
 
 namespace Demo_Common.Entity
 {
@@ -30,7 +29,5 @@ namespace Demo_Common.Entity
         public string OldKey { get; set; } = "";
         [Key(9)]
         public string NewKey { get; set; } = "";
-        [Key(10)]
-        public string Base64String { get; set; } = "";
     }
 }

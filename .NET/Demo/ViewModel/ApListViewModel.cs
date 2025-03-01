@@ -10,8 +10,17 @@ namespace Demo_WPF.ViewModel
     internal class ApListViewModel : ViewModelBase
     {
         private object _locker = new();
+        private int _count = 0;
         private ApModel? selectAP = null;
         private ObservableCollection<ApModel> aps = [];
+        /// <summary>
+        /// APs count
+        /// </summary>
+        public int Count { get => _count; set { _count = value; NotifyPropertyChanged(nameof(Header)); } }
+        /// <summary>
+        /// Header text
+        /// </summary>
+        public string Header => $"AP List ({_count})";
         /// <summary>
         /// Select AP
         /// </summary>
@@ -54,6 +63,8 @@ namespace Demo_WPF.ViewModel
                     {
                         ap = new ApModel(id, ip, status);
                         APs.Add(ap);
+                        Count = APs.Count;
+                        if (SelectAP is null) SelectAP = ap;
                     }
                     else
                     {

@@ -79,7 +79,7 @@ namespace Demo_Common.Helper
             {
                 using var md5Provider = MD5.Create();
                 var buffer = md5Provider.ComputeHash(bytes);
-                var result = BitConverter.ToString(buffer);
+                var result = Convert.ToHexString(buffer);
                 md5Provider.Clear();
                 return result;
             }

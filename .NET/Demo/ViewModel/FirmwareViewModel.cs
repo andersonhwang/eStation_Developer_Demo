@@ -1,5 +1,6 @@
 ﻿using Demo_Common.Entity;
 using Demo_Common.Enum;
+using Demo_Common.Helper;
 using Demo_Common.Service;
 using Demo_WPF.Helper;
 using Demo_WPF.Model;
@@ -20,6 +21,10 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         public ApOTA Data { get => data; set { data = value; NotifyPropertyChanged(nameof(Data)); } }
         /// <summary>
+        /// Tag types
+        /// </summary>
+        public List<TagType> TagTypes { get; private set; }
+        /// <summary>
         /// Command - Browse
         /// </summary>
         public ICommand CmdBrowse { get; set; }
@@ -32,6 +37,8 @@ namespace Demo_WPF.ViewModel
         {
             CmdBrowse = new MyCommand(DoBrowse, CanBrowse);
             CmdOTA = new MyAsyncCommand(DoOTA, CanOTA);
+
+            TagTypes = TagHelper.TagTypes;
         }
 
         /// <summary>
@@ -64,6 +71,7 @@ namespace Demo_WPF.ViewModel
             {
                 var dialog = new OpenFileDialog
                 {
+                    Multiselect = false,
                     RestoreDirectory = true,
                     DefaultDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
                     DefaultExt = Data.Type switch
@@ -82,7 +90,10 @@ namespace Demo_WPF.ViewModel
 
                 if (result == true)
                 {
-                    Data.NameM = dialog.FileName;
+                    Data.NameM = Data.IsAP ? Path.GetFileName(dialog.FileName) : Data.TagType;
+                    Data.MD5M = FileHelper.GetBytesMd5(File.ReadAllBytes(dialog.FileName));
+
+                    WebService.Instance.AddItem(Data.NameM, dialog.FileName);
                 }
             }
             catch (Exception ex)
@@ -100,16 +111,18 @@ namespace Demo_WPF.ViewModel
             try
             {
                 WebService.Instance.AddItem(Path.GetFileNameWithoutExtension(Data.Name), Data.Name);
+                var ip = WebService.Instance.IP;
+                var ap = SendService.Instance.CurrentAP;
                 var ota = new OTAData()
                 {
-                    ConfirmUrl = Data.ConfirmUrl,
-                    DownloadUrl = Data.DownloadUrl,
+                    ConfirmUrl = $"http://{ip}/confirm/{ap}/{Data.NameM}",
+                    DownloadUrl = $"http://{ip}/ota/{Data.NameM}",
                     MD5 = Data.MD5,
                     Name = Data.Name,
                     Type = Data.Type,
                     Version = Data.Version
                 };
-                var result = await SendService.Instance.Send(0x05, "firmware", Data);
+                var result = await SendService.Instance.Send(0x05, "firmware", ota);
                 if (result != SendResult.Success)
                 {
                     MsgHelper.Error("OTA_ERR:" + result);

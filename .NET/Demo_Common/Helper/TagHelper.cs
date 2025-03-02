@@ -94,7 +94,7 @@ namespace Demo_Common.Helper
             DicTypes.Add("3D", new TagType("3D", 296, 128, "ET0290-3D", ColorType.BlackRed));
             DicTypes.Add("3E", new TagType("3E", 296, 296, "ET0290-3E", ColorType.BlackYellow));
             DicTypes.Add("3F", new TagType("3F", 296, 128, "ET0290-3F", ColorType.Black));
-            DicTypes.Add("40", new TagType("40", 400, 300, "ET0420-40", ColorType.Black));
+            DicTypes.Add("40", new TagType("40", 400, 300, "ET0420-40", ColorType.BlackRed));
             DicTypes.Add("41", new TagType("41", 400, 300, "ET0420-41", ColorType.BlackYellow));
             DicTypes.Add("42", new TagType("42", 400, 300, "ET0420-42", ColorType.Black));
             DicTypes.Add("43", new TagType("43", 400, 300, "ET0420-43", ColorType.BlackRed));

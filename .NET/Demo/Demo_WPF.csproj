@@ -7,10 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Title>eStation_Developer_Demo</Title>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Anderson H</Authors>
     <Description>Demo for eStatoion developer edtion</Description>
-    <Copyright>Suzhou ETAG Technology</Copyright>
+    <Copyright>Suzhou ETAG Technology, 2025</Copyright>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType></RepositoryType>
     <PackageTags></PackageTags>
@@ -27,6 +27,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo_Common\Demo_Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TagType.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

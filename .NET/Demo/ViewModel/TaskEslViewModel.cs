@@ -9,6 +9,7 @@ using Serilog;
 using SkiaSharp;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Windows.Input;
 
 namespace Demo_WPF.ViewModel
@@ -115,9 +116,10 @@ namespace Demo_WPF.ViewModel
                     break;
                 case "1":
                     var list2 = new List<ESLEntity2>();
+                    var data = Compress(bytes);
                     foreach (var id in Esl.ID)
                     {
-                        if (PackageEntity(new ESLEntity2 { TagID = id, Bytes = bytes }) is not ESLEntity2 esl) continue;
+                        if (PackageEntity(new ESLEntity2 { TagID = id, Bytes = data }) is not ESLEntity2 esl) continue;
                         list2.Add(esl);
                     }
                     result = await SendService.Instance.Send(0x03, "taskESL2", list2);
@@ -201,6 +203,21 @@ namespace Demo_WPF.ViewModel
             }
 
             static int W8(int w) => (w % 8) == 0 ? w : (((w / 8) + 1) * 8);
+        }
+
+        /// <summary>
+        /// Compress data with GZip
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <returns>Compressed data</returns>
+        private static byte[] Compress(byte[] source)
+        {
+            using MemoryStream memory = new();
+            using (GZipStream gizp = new(memory, CompressionLevel.Optimal))
+            {
+                gizp.Write(source, 0, source.Length);
+            }
+            return memory.ToArray();
         }
     }
 }

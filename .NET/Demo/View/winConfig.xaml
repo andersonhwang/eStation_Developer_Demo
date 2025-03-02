@@ -45,11 +45,11 @@
             <TextBlock Grid.Row="5" Grid.Column="0" Text="IP Config"/>
             <CheckBox Grid.Row="5" Grid.Column="1" Content="Obtain an IP address automatically" IsChecked="{Binding Config.AutoIPM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Grid.Row="6" Grid.Column="0" Text="IP Address"/>
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Config.LocalIPM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Config.AutoIP, Converter={StaticResource BoolConverter}}"/>
+            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Config.LocalIPM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Config.AutoIPM, Converter={StaticResource BoolConverter}}"/>
             <TextBlock Grid.Row="7" Grid.Column="0" Text="Subnet Mask"/>
-            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Config.SubnetM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Config.AutoIP, Converter={StaticResource BoolConverter}}"/>
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Config.SubnetM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Config.AutoIPM, Converter={StaticResource BoolConverter}}"/>
             <TextBlock Grid.Row="8" Grid.Column="0" Text="Gateway"/>
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Config.GatewayM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Config.AutoIP, Converter={StaticResource BoolConverter}}"/>
+            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding Config.GatewayM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Config.AutoIPM, Converter={StaticResource BoolConverter}}"/>
             <TextBlock Grid.Row="9" Grid.Column="0" Text="Heartbeat"/>
             <TextBox Grid.Row="9" Grid.Column="1" Text="{Binding Config.HeartbeatM, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Grid.Row="10" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>

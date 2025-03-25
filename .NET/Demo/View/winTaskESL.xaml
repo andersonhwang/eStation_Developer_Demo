@@ -10,7 +10,7 @@
         xmlns:t="clr-namespace:Demo_WPF.Extension"
         xmlns:e="clr-namespace:Demo_Common.Enum;assembly=Demo_Common"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
-        Title="Publish Task" Height="250" Width="530"
+        Title="Publish Task" Height="276" Width="530"
         h:DialogHelper.DialogResult="{Binding DialogResult}">
     <Window.DataContext>
         <vm:TaskEslViewModel/>
@@ -23,12 +23,13 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Tag Type"/>
         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Type.Type}"/>
@@ -38,9 +39,16 @@
         <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Esl.Path}"/>
         <Button Grid.Row="1" Grid.Column="3" Content="Browse" Command="{Binding CmdBrowse}"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="LED Color"/>
-        <CheckBox Grid.Row="2" Grid.Column="1" Content="Red" IsChecked="{Binding Esl.R, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <CheckBox Grid.Row="2" Grid.Column="2" Content="Green" IsChecked="{Binding Esl.G, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <CheckBox Grid.Row="2" Grid.Column="3" Content="Blue" IsChecked="{Binding Esl.B, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" Content="Red" IsChecked="{Binding Esl.R, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <CheckBox Grid.Column="1" Content="Green" IsChecked="{Binding Esl.G, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <CheckBox Grid.Column="2" Content="Blue" IsChecked="{Binding Esl.B, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Times"/>
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Esl.Times, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" h:TextBoxHelper.NumberOnly="True"/>
         <TextBlock Grid.Row="3" Grid.Column="2" Text="Token"/>
@@ -49,8 +57,13 @@
         <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={t:EnumSource {x:Type e:Pattern}}}" SelectedValue="{Binding Esl.Pattern}"/>
         <TextBlock Grid.Row="4" Grid.Column="2" Text="Page Index"/>
         <ComboBox Grid.Row="4" Grid.Column="3" ItemsSource="{Binding Source={t:EnumSource {x:Type e:PageIndex}}}" SelectedValue="{Binding Esl.PageIndex}"/>
-        <Button Grid.Row="5" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>
-        <Button Grid.Row="5" Grid.Column="2" Content="PublishESL" Command="{Binding CmdPublish}" CommandParameter="0"/>
-        <Button Grid.Row="5" Grid.Column="3" Content="PublishESL2" Command="{Binding CmdPublish}" CommandParameter="1"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Current Key"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Esl.CurrentKey}" MaxLength="22"/>
+        <TextBlock Grid.Row="5" Grid.Column="2" Text="New Key" Visibility="{Binding Esl.Pattern, Converter={StaticResource KeyVisiableConverter}}"/>
+        <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding Esl.NewKey}" MaxLength="22" Visibility="{Binding Esl.Pattern, Converter={StaticResource KeyVisiableConverter}}"
+                 IsEnabled="{Binding Esl.Pattern, Converter={StaticResource PatternConverter}}"/>
+        <Button Grid.Row="6" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>
+        <Button Grid.Row="6" Grid.Column="2" Content="PublishESL" Command="{Binding CmdPublish}" CommandParameter="0"/>
+        <Button Grid.Row="6" Grid.Column="3" Content="PublishESL2" Command="{Binding CmdPublish}" CommandParameter="1"/>
     </Grid>
 </Window>

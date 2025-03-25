@@ -33,7 +33,13 @@ namespace Demo_WPF.ViewModel
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        private bool CanConfig(object obj) => true;
+        private bool CanConfig(object obj)
+        {
+            if (Config.AutoIPM) return true;
+            return RegExpress.REG_IP.IsMatch(Config.LocalIPM) &&
+                RegExpress.REG_IP.IsMatch(Config.SubnetM) &&
+                RegExpress.REG_IP.IsMatch(Config.GatewayM);
+        }
 
         /// <summary>
         /// Do config

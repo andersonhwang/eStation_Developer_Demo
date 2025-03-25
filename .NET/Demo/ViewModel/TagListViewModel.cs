@@ -187,13 +187,27 @@ namespace Demo_WPF.ViewModel
                     var tag = Tags.FirstOrDefault(x => x.ID == item.TagId);
                     if (tag is null) continue;
                     tag.LastRecv = DateTime.Now;
-                    tag.Status = item.RfPower == -256 ? TagStatus.Error : TagStatus.Success;    // -256 is failed
+                    tag.Status = GetTagStatus(item);
                     tag.Battery = item.Battery;
                     tag.RfPower = item.RfPower;
                     tag.Temperature = item.Temperature;
+                    tag.Version = item.Version;
 
                     if (tag.Status == TagStatus.Error) tag.ErrorCount++;
                 }
+            }
+
+            static TagStatus GetTagStatus(TagResult item)
+            {
+                if (item.RfPower == -256) return TagStatus.Error;                   // Failed
+                if (item.Status == 0xF0) return TagStatus.InvaidKey;                // Invalid key
+                if (item.Status == 0xF1) return TagStatus.DuplicateToken;           // Duplciate token
+                if (item.Status == 0x01) return TagStatus.LcmdIdError;              // LCM ID error
+                if (item.Status == 0x02) return TagStatus.McuReset;                 // Failed, MCU reset
+                if (item.Status == 0x03) return TagStatus.LcmdRefreshError;         // LCM refresh error
+                var type = TagHelper.GetTagType(item.TagId);
+                var battery = (type.Type == "39" || type.Type == "54") ? 22 : 25;   // Type 39&54 is frozen tag
+                return item.Battery < battery ? TagStatus.LowPower : TagStatus.Success;
             }
         }
 
@@ -361,7 +375,7 @@ namespace Demo_WPF.ViewModel
         /// <param name="id">Tag ID</param>
         private void AddTag(Tag tag)
         {
-            Tags.Add(tag); 
+            Tags.Add(tag);
             Count = Tags.Count;
             if (Header.Same && Tags.Count > 1)
             {

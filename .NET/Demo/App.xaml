@@ -10,6 +10,8 @@
             <c:ApStatusTextConverter x:Key="ApStatusTextConverter"/>
             <c:ApStatusBoolConverter x:Key="ApStatusBoolConverter"/>
             <c:BoolConverter x:Key="BoolConverter"/>
+            <c:PatternConverter x:Key="PatternConverter"/>
+            <c:KeyVisiableConverter x:Key="KeyVisiableConverter"/>
             <c:TagStatusConverter x:Key="TagStatusConverter"/>
             <c:VisibilityConverter x:Key="VisibilityConverter"/>
             <Style TargetType="ComboBox">
@@ -98,28 +100,49 @@
                 <Setter Property="TextAlignment" Value="Center"/>
                 <Setter Property="FontSize" Value="14"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"  Value="--">
-                        <Setter Property="Foreground" Value="Black"/>
-                    </DataTrigger>
                     <!--Init-->
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"  Value="Init">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="0">
                         <Setter Property="Foreground" Value="Black"/>
                     </DataTrigger>
                     <!--Sending-->
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"  Value="Sending">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="1">
                         <Setter Property="Foreground" Value="GreenYellow"/>
                         <Setter Property="Background" Value="Green"/>
                     </DataTrigger>
-                    <!--Online-->
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"  Value="Success">
+                    <!--Success-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="2">
+                        <Setter Property="Foreground" Value="Blue"/>
+                    </DataTrigger>
+                    <!--Error-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="3">
                         <Setter Property="Foreground" Value="Blue"/>
                     </DataTrigger>
                     <!--Heartbeat-->
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"  Value="Heartbeat">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="4">
                         <Setter Property="Foreground" Value="Blue"/>
                     </DataTrigger>
-                    <!--Offline-->
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Text}"  Value="Error">
+                    <!--Low Power-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="5">
+                        <Setter Property="Foreground" Value="Orange"/>
+                    </DataTrigger>
+                    <!--Invalid Key-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="6">
+                        <Setter Property="Foreground" Value="Red"/>
+                    </DataTrigger>
+                    <!--Duplicate Token-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="7">
+                        <Setter Property="Foreground" Value="Blue"/>
+                    </DataTrigger>
+                    <!--LCM ID Error-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="8">
+                        <Setter Property="Foreground" Value="Red"/>
+                    </DataTrigger>
+                    <!--LCM Refresh Error-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="9">
+                        <Setter Property="Foreground" Value="Red"/>
+                    </DataTrigger>
+                    <!--MCU Reset-->
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="10">
                         <Setter Property="Foreground" Value="Red"/>
                     </DataTrigger>
                 </Style.Triggers>

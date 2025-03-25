@@ -11,7 +11,14 @@ namespace Demo_WPF.Convert
     public class TagStatusConverter : IValueConverter
     {
         #region IValueConverter Members
-
+        /// <summary>
+        /// Convert
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (targetType != typeof(string)) return string.Empty;
@@ -23,21 +30,27 @@ namespace Demo_WPF.Convert
                 TagStatus.Success => "Success",
                 TagStatus.Error => "Error",
                 TagStatus.Heartbeat => "Heartbeat",
+                TagStatus.InvaidKey => "Invalid Key",
+                TagStatus.DuplicateToken => "Duplicate Token",
+                TagStatus.LcmdIdError => "LCM ID Error",
+                TagStatus.LcmdRefreshError => "LCM Refresh Error",
+                TagStatus.McuReset => "MCU Reset",
+                TagStatus.Unknown => "Unknown",
                 _ => "--",
             };
         }
 
+        /// <summary>
+        /// Convert back
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (string)value switch
-            {
-                "Init" => TagStatus.Init,
-                "Sending" => TagStatus.Sending,
-                "Success" => TagStatus.Success,
-                "Error" => TagStatus.Error,
-                "Heartbeat" => TagStatus.Heartbeat,
-                _ => TagStatus.Init,
-            };
+            return TagStatus.Unknown; // No convert back
         }
         #endregion
     }

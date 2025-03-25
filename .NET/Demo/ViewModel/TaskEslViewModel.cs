@@ -7,7 +7,6 @@ using Demo_WPF.Model;
 using Microsoft.Win32;
 using Serilog;
 using SkiaSharp;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Windows.Input;
@@ -76,7 +75,7 @@ namespace Demo_WPF.ViewModel
                 var dialog = new OpenFileDialog
                 {
                     RestoreDirectory = true,
-                    DefaultDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                    DefaultDirectory = Path.GetDirectoryName(Environment.ProcessPath),
                     DefaultExt = ".bmp",
                     Filter = "Bitmap|*.bmp"
                 };
@@ -151,7 +150,8 @@ namespace Demo_WPF.ViewModel
         /// <returns>Result</returns>
         private bool CanPublish(object obj)
         {
-            if(Esl.Pattern.Equals(Pattern.UpdateDisplay) || Esl.Pattern.Equals(Pattern.Update)) return File.Exists(Esl.Path);
+            if (Esl.Pattern.Equals(Pattern.UpdateDisplay) || Esl.Pattern.Equals(Pattern.Update)) return File.Exists(Esl.Path);
+            if (Esl.Pattern.Equals(Pattern.Key)) return RegExpress.REG_TAG_KEY.IsMatch(Esl.NewKey);
             return true;
         }
 
@@ -169,6 +169,7 @@ namespace Demo_WPF.ViewModel
             entity.G = Esl.G;
             entity.B = Esl.B;
             entity.Times = Esl.Times;
+            entity.CurrentKey = Esl.CurrentKey;
             entity.NewKey = Esl.NewKey;
             return entity;
         }
@@ -183,7 +184,7 @@ namespace Demo_WPF.ViewModel
         {
             try
             {
-                if(Path.Exists(path) is false) return [];
+                if (Path.Exists(path) is false) return [];
                 var bitmap = SKBitmap.Decode(path);
                 if (bitmap.Info.Width.Equals(type.Width) && bitmap.Info.Height.Equals(type.Height))
                     return bitmap.Bytes;

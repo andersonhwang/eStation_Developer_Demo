@@ -3,7 +3,7 @@
     public class TaskESL : TaskBase
     {
         protected int times = 60;
-        private string oldKey = string.Empty;
+        private string currentKey = string.Empty;
         private string newKey = string.Empty;
 
         /// <summary>
@@ -11,9 +11,9 @@
         /// </summary>
         public int Times { get => times; set { times = value; NotifyPropertyChanged(nameof(Times)); } }
         /// <summary>
-        /// Old key
+        /// Current key
         /// </summary>
-        public string OldKey { get => oldKey; set { oldKey = value; NotifyPropertyChanged(nameof(OldKey)); } }
+        public string CurrentKey { get => currentKey; set { currentKey = value; NotifyPropertyChanged(nameof(CurrentKey)); } }
         /// <summary>
         /// New key
         /// </summary>

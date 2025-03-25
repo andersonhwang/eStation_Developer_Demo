@@ -26,7 +26,7 @@ namespace Demo_Common.Entity
         [Key(7)]
         public int Token { get; set; } = 0;
         [Key(8)]
-        public string OldKey { get; set; } = "";
+        public string CurrentKey { get; set; } = "";
         [Key(9)]
         public string NewKey { get; set; } = "";
     }

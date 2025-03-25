@@ -71,7 +71,8 @@ xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Status, Converter={StaticResource TagStatusConverter}}" Style="{StaticResource tbTagStatus}"/>
+                                <TextBlock Text="{Binding Status, Converter={StaticResource TagStatusConverter}}"
+                                           Tag="{Binding Status}" Style="{StaticResource tbTagStatus}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

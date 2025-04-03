@@ -115,7 +115,7 @@
                     </DataTrigger>
                     <!--Error-->
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="3">
-                        <Setter Property="Foreground" Value="Blue"/>
+                        <Setter Property="Foreground" Value="Red"/>
                     </DataTrigger>
                     <!--Heartbeat-->
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self},Path=Tag}"  Value="4">

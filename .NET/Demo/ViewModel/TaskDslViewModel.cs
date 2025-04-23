@@ -65,7 +65,7 @@ namespace Demo_WPF.ViewModel
                 var dialog = new OpenFileDialog
                 {
                     RestoreDirectory = true,
-                    DefaultDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                    DefaultDirectory = Path.GetDirectoryName(Environment.ProcessPath),
                     DefaultExt = ".bin",
                     Filter = "Binary|*.bin"
                 };

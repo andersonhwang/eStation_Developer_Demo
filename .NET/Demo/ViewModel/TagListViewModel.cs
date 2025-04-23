@@ -5,8 +5,6 @@ using Demo_Common.Service;
 using Demo_WPF.Model;
 using Demo_WPF.View;
 using Serilog;
-using System.Collections.Frozen;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -312,7 +310,10 @@ namespace Demo_WPF.ViewModel
         /// <exception cref="NotImplementedException"></exception>
         private void DoSelectAllTags(object obj)
         {
-
+            foreach (var tag in Tags)
+            {
+                tag.Select = Header.Select;
+            }
         }
 
         /// <summary>

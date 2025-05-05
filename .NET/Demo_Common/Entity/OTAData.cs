@@ -34,7 +34,9 @@ namespace Demo_Common.Entity
         [Key(4)]
         public string Name { get; set; } = string.Empty;
         /// <summary>
-        /// MD5 Check String
+        /// MD5 Check String, 
+        /// Version<=1.0.24, 00-11-22-33-44-55-66-77
+        /// Version>=1.0.25, 0011223344556677
         /// </summary>
         [Key(5)]
         public string MD5 { get; set; } = string.Empty;

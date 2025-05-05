@@ -124,21 +124,17 @@ namespace Demo_Console
         {
             try
             {
-                var img = SKData.Create("T0.bmp");
-                var bmp = SKBitmap.Decode(img);
-                var bytes = Compress(bmp.Bytes);
-                var list = new List<ESLEntity2>();
-                foreach (var id in ESL_LST)
+                var config = new ApConfig
                 {
-                    list.Add(new ESLEntity2
-                    {
-                        TagID = id,
-                        Compress = true,
-                        Bytes = bytes,
-                        Token = Token
-                    });
-                }
-                return SendService.Instance.Send(APID, 0x01, TopicConfig, list).Result;
+                    Alias = "01", // If alias is 0x00 ~ 0xFF, it will be displayed in the segment
+                    Server = "192.168.1.92:9071",
+                    ConnParam = ["user", "password"],
+                    AutoIP = true,
+                    Encrypt = false,
+                };
+                var result = SendService.Instance.Send(0x01, "configure", config).Result;
+                
+                return result;
             }
             catch (Exception ex)
             {
@@ -160,7 +156,7 @@ namespace Demo_Console
                 var list = new List<ESLEntity>();
                 foreach (var id in ESL_LST)
                 {
-                    list.Add(new ESLEntity
+                    list.Add(new ESLEntity1
                     {
                         TagID = id,
                         Base64String = base64,
@@ -261,46 +257,51 @@ namespace Demo_Console
         /// AP status handler
         /// </summary>
         /// <param name="id">AP ID</param>
+        /// <param name="ip">AP IP</param>
         /// <param name="status">AP status</param>
-        private static void ApStatusHandler(string id, ApStatus status)
+        private static void ApStatusHandler(string id, string ip, ApStatus status)
         {
-            Log.Information($"AP:{id}, Status:{status}.");
+            Log.Information($"AP:{id}, IP:{ip}, Status:{status}.");
         }
 
         /// <summary>
         /// AP heartbeat handler
         /// </summary>
+        /// <param name="id">AP ID</param>
         /// <param name="heartbeat">AP heartbeat</param>
-        private static void ApHeartbeatHandler(ApHeartbeat heartbeat)
+        private static void ApHeartbeatHandler(string id, ApHeartbeat heartbeat)
         {
-            // Log.Information($"[AP Heartbeat]{JsonSerializer.Serialize(heartbeat)}");
+            // Log.Information($"[AP Heartbeat]{id}:{JsonSerializer.Serialize(heartbeat)}");
         }
 
         /// <summary>
         /// AP infor handler
         /// </summary>
+        /// <param name="id">AP ID</param>
         /// <param name="infor">AP infor</param>
-        private static void ApInforHandler(ApInfor infor)
+        private static void ApInforHandler(string id, ApInfor infor)
         {
-            Log.Information($"[AP Infor]{JsonSerializer.Serialize(infor)}");
+            Log.Information($"[AP Infor]{id}:{JsonSerializer.Serialize(infor)}");
         }
 
         /// <summary>
         /// AP message handler
         /// </summary>
+        /// <param name="id">AP ID</param>
         /// <param name="message">AP message</param>
-        private static void ApMessageHandler(ApMessage message)
+        private static void ApMessageHandler(string id, ApMessage message)
         {
-            Log.Information($"[AP Message]{JsonSerializer.Serialize(message)}");
+            Log.Information($"[AP Message]{id}:{JsonSerializer.Serialize(message)}");
         }
 
         /// <summary>
         /// Task result handler
         /// </summary>
+        /// <param name="id">AP ID</param>
         /// <param name="result">Task result</param>
-        private static void TaskResultHandler(TaskResult result)
+        private static void TaskResultHandler(string id, TaskResult result)
         {
-            Log.Information($"[Task Result]{JsonSerializer.Serialize(result)}");
+            Log.Information($"[Task Result]{id}:{JsonSerializer.Serialize(result)}");
         }
     }
 }

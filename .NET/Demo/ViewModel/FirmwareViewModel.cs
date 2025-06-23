@@ -73,7 +73,7 @@ namespace Demo_WPF.ViewModel
                 {
                     Multiselect = false,
                     RestoreDirectory = true,
-                    DefaultDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
+                    DefaultDirectory = Path.GetDirectoryName(Environment.ProcessPath),
                     DefaultExt = Data.Type switch
                     {
                         1 => ".tar",

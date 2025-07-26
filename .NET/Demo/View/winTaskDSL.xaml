@@ -7,6 +7,7 @@
     xmlns:h="clr-namespace:Demo_WPF.Helper"
     xmlns:v="clr-namespace:Demo_WPF.View"
     xmlns:vm="clr-namespace:Demo_WPF.ViewModel"
+        xmlns:t="clr-namespace:Demo_WPF.Extension"
     xmlns:e="clr-namespace:Demo_Common.Enum;assembly=Demo_Common"
     mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
     Title="Publish Task" Height="210" Width="500"
@@ -16,6 +17,8 @@
     </Window.DataContext>
     <Grid h:GridHelper.LineBrush="Black" h:GridHelper.ShowBorder="True" h:GridHelper.LineThickness="0.5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
@@ -43,7 +46,15 @@
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Dsl.Duration, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="3" h:TextBoxHelper.NumberOnly="True"/>
         <TextBlock Grid.Row="3" Grid.Column="2" Text="Token"/>
         <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Dsl.Token, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Grid.Row="4" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>
-        <Button Grid.Row="4" Grid.Column="3" Content="PublishDSL" Command="{Binding CmdPublish}" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Pattern"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding Source={t:EnumSource {x:Type e:Pattern}}}" SelectedValue="{Binding Dsl.Pattern}"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Current Key"/>
+        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Dsl.CurrentKey}" MaxLength="22"/>
+        <TextBlock Grid.Row="5" Grid.Column="2" Text="New Key" Visibility="{Binding Dsl.Pattern, Converter={StaticResource KeyVisiableConverter}}"/>
+        <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding Dsl.NewKey}" MaxLength="22" Visibility="{Binding Dsl.Pattern, Converter={StaticResource KeyVisiableConverter}}"
+         IsEnabled="{Binding Esl.Pattern, Converter={StaticResource PatternConverter}}"/>
+        <Button Grid.Row="6" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>
+        <Button Grid.Row="6" Grid.Column="2" Content="PublishDSL" Command="{Binding CmdPublish}" CommandParameter="0"/>
+        <Button Grid.Row="6" Grid.Column="3" Content="PublishDSL2" Command="{Binding CmdPublish}" CommandParameter="1"/>
     </Grid>
 </Window>

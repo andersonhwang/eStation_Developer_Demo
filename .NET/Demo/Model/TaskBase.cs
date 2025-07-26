@@ -15,6 +15,8 @@ namespace Demo_WPF.Model
         protected Pattern pattern = Pattern.UpdateDisplay;
         protected PageIndex page = PageIndex.P0;
         protected string path = string.Empty;
+        protected string currentKey = string.Empty;
+        protected string newKey = string.Empty;
 
         /// <summary>
         /// Tag ID
@@ -48,5 +50,13 @@ namespace Demo_WPF.Model
         /// Path
         /// </summary>
         public string Path { get => path; set { path = value; NotifyPropertyChanged(nameof(Path)); } }
+        /// <summary>
+        /// Current key
+        /// </summary>
+        public string CurrentKey { get => currentKey; set { currentKey = value; NotifyPropertyChanged(nameof(CurrentKey)); } }
+        /// <summary>
+        /// New key
+        /// </summary>
+        public string NewKey { get => newKey; set { newKey = value; NotifyPropertyChanged(nameof(NewKey)); } }
     }
 }

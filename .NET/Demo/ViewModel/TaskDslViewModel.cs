@@ -89,22 +89,56 @@ namespace Demo_WPF.ViewModel
         private async Task DoPublish(object arg)
         {
             var list = new List<DSLEntity>();
-            var bytes = File.ReadAllBytes(Dsl.Path);
-            foreach (var id in Dsl.ID)
+            var bytes = File.Exists(Dsl.Path) ? File.ReadAllBytes(Dsl.Path) : [];
+            var result = SendResult.Unknown;
+
+            if (bytes.Length > 0xFFFF)
             {
-                list.Add(new DSLEntity { 
-                    TagID = id, 
-                    HexData = bytes,
-                    Token = Dsl.Token,
-                    R = Dsl.R,
-                    G = Dsl.G,
-                    B = Dsl.B,
-                    Period = Dsl.Period,
-                    Interval = Dsl.Interval,
-                    Duration = Dsl.Duration
-                });
+                MsgHelper.Error("File_Too_Large");
+                return;
             }
-            var result = await SendService.Instance.Send(0x04, "taskDSL", list);
+            switch (arg.ToString())
+            {
+                case "0":
+                    foreach (var id in Dsl.ID)
+                    {
+                        list.Add(new DSLEntity
+                        {
+                            TagID = id,
+                            HexData = bytes,
+                            Token = Dsl.Token,
+                            R = Dsl.R,
+                            G = Dsl.G,
+                            B = Dsl.B,
+                            Period = Dsl.Period,
+                            Interval = Dsl.Interval,
+                            Duration = Dsl.Duration
+                        });
+                    }
+                    result = await SendService.Instance.Send(0x04, "taskDSL", list);
+                    break;
+                case "1":
+                    foreach (var id in Dsl.ID)
+                    {
+                        list.Add(new DSLEntity2
+                        {
+                            TagID = id,
+                            HexData = bytes,
+                            Token = Dsl.Token,
+                            R = Dsl.R,
+                            G = Dsl.G,
+                            B = Dsl.B,
+                            Period = Dsl.Period,
+                            Interval = Dsl.Interval,
+                            Duration = Dsl.Duration,
+                            Pattern = Dsl.Pattern,
+                            CurrentKey = Dsl.CurrentKey,
+                            NewKey = Dsl.NewKey
+                        });
+                    }
+                    result = await SendService.Instance.Send(0x07, "taskDSL2", list);
+                    break;
+            }
             if (result == SendResult.Success)
             {
                 SendHandler?.Invoke(Dsl.ID);

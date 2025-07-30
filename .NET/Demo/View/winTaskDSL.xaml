@@ -52,7 +52,7 @@
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Dsl.CurrentKey}" MaxLength="22"/>
         <TextBlock Grid.Row="5" Grid.Column="2" Text="New Key" Visibility="{Binding Dsl.Pattern, Converter={StaticResource KeyVisiableConverter}}"/>
         <TextBox Grid.Row="5" Grid.Column="3" Text="{Binding Dsl.NewKey}" MaxLength="22" Visibility="{Binding Dsl.Pattern, Converter={StaticResource KeyVisiableConverter}}"
-         IsEnabled="{Binding Esl.Pattern, Converter={StaticResource PatternConverter}}"/>
+         IsEnabled="{Binding Dsl.Pattern, Converter={StaticResource PatternConverter}}"/>
         <Button Grid.Row="6" Grid.Column="0" Content="Cancel" Command="{Binding CmdCancel}"/>
         <Button Grid.Row="6" Grid.Column="2" Content="PublishDSL" Command="{Binding CmdPublish}" CommandParameter="0"/>
         <Button Grid.Row="6" Grid.Column="3" Content="PublishDSL2" Command="{Binding CmdPublish}" CommandParameter="1"/>

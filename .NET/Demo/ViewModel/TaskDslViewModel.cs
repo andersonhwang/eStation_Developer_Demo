@@ -88,7 +88,6 @@ namespace Demo_WPF.ViewModel
         /// <returns>The task</returns>
         private async Task DoPublish(object arg)
         {
-            var list = new List<DSLEntity>();
             var bytes = File.Exists(Dsl.Path) ? File.ReadAllBytes(Dsl.Path) : [];
             var result = SendResult.Unknown;
 
@@ -100,6 +99,7 @@ namespace Demo_WPF.ViewModel
             switch (arg.ToString())
             {
                 case "0":
+                    var list = new List<DSLEntity>();
                     foreach (var id in Dsl.ID)
                     {
                         list.Add(new DSLEntity
@@ -118,9 +118,10 @@ namespace Demo_WPF.ViewModel
                     result = await SendService.Instance.Send(0x04, "taskDSL", list);
                     break;
                 case "1":
+                    var list2 = new List<DSLEntity>();
                     foreach (var id in Dsl.ID)
                     {
-                        list.Add(new DSLEntity2
+                        list2.Add(new DSLEntity2
                         {
                             TagID = id,
                             HexData = bytes,
@@ -136,7 +137,7 @@ namespace Demo_WPF.ViewModel
                             NewKey = Dsl.NewKey
                         });
                     }
-                    result = await SendService.Instance.Send(0x07, "taskDSL2", list);
+                    result = await SendService.Instance.Send(0x07, "taskDSL2", list2);
                     break;
             }
             if (result == SendResult.Success)

@@ -110,7 +110,7 @@ namespace Demo_WPF.ViewModel
         {
             try
             {
-                WebService.Instance.AddItem(Path.GetFileNameWithoutExtension(Data.Name), Data.Name);
+                //WebService.Instance.AddItem(Path.GetFileNameWithoutExtension(Data.Name), Data.Name);
                 var ip = WebService.Instance.IP;
                 var ap = SendService.Instance.CurrentAP;
                 var ota = new OTAData()

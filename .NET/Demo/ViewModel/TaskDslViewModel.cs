@@ -118,7 +118,7 @@ namespace Demo_WPF.ViewModel
                     result = await SendService.Instance.Send(0x04, "taskDSL", list);
                     break;
                 case "1":
-                    var list2 = new List<DSLEntity>();
+                    var list2 = new List<DSLEntity2>();
                     foreach (var id in Dsl.ID)
                     {
                         list2.Add(new DSLEntity2

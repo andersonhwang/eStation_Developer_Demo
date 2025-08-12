@@ -99,13 +99,13 @@ namespace Demo_Common.Service
                                 await Task.Delay(200);
                                 continue;
                             }
-                            if(!Clients.ContainsKey(item.Id)) continue; 
+                            if (!Clients.ContainsKey(item.Id)) continue;
 
                             var ap = Clients[item.Id];
                             var json = string.Empty;
                             var alias = item.TopicAlias;
                             // Previous
-                            if(alias == 0)
+                            if (alias == 0)
                             {
                                 if (item.Topic.EndsWith("infor")) alias = 0x80;
                                 else if (item.Topic.EndsWith("message")) alias = 0x81;
@@ -149,7 +149,7 @@ namespace Demo_Common.Service
                                     break;
                             }
                             DebugHandler?.Invoke(false, new DebugItem(item, json));
-                            if(item.Id.Equals(CurrentAP)) SelectApHandler?.Invoke(ap);
+                            if (item.Id.Equals(CurrentAP)) SelectApHandler?.Invoke(ap);
                         }
                         catch
                         {

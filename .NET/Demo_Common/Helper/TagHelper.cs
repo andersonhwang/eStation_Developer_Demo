@@ -128,6 +128,8 @@ namespace Demo_Common.Helper
             DicTypes.Add("68", new TagType("68", 960, 680, "ET1330-68", ColorType.BlackRed));
             DicTypes.Add("69", new TagType("69", 184, 88, "ET0097-69", ColorType.BlackRed));
             DicTypes.Add("6F", new TagType("6F", 792, 272, "ET0579-6F", ColorType.BlackRed));
+            DicTypes.Add("71", new TagType("71", 200, 144, "ET0154H-71"));
+            DicTypes.Add("73", new TagType("73", 200, 200, "ET0130H-73"));
             DicTypes.Add("80", new TagType("80", 200, 200, "ET0154-80", ColorType.BlackRedYellow));
             DicTypes.Add("81", new TagType("81", 250, 122, "ET0213-81", ColorType.BlackRedYellow));
             DicTypes.Add("82", new TagType("82", 296, 152, "ET0266-82", ColorType.BlackRedYellow));
@@ -140,7 +142,12 @@ namespace Demo_Common.Helper
             DicTypes.Add("89", new TagType("89", 800, 480, "ET0750-89", ColorType.BlackRedYellow));
             DicTypes.Add("8A", new TagType("8A", 880, 528, "ET0750-8A", ColorType.BlackRedYellow));
             DicTypes.Add("8B", new TagType("8B", 960, 640, "ET1020-8B", ColorType.BlackRedYellow));
-            DicTypes.Add("D0", new TagType("D0", 960, 640, "ET0240C-D0", ColorType.Black));
+            DicTypes.Add("8C", new TagType("8C", 184, 88, "ET0097H-8C", ColorType.BlackRedYellow));
+            DicTypes.Add("8D", new TagType("8D", 200, 144, "ET0130H-8D", ColorType.BlackRedYellow));
+            DicTypes.Add("8E", new TagType("8E", 960, 680, "ET1330-8E", ColorType.BlackRedYellow));
+            DicTypes.Add("8F", new TagType("8F", 416, 240, "ET0370-8F", ColorType.BlackRedYellow));
+            DicTypes.Add("90", new TagType("90", 200, 200, "ET0154H-90", ColorType.BlackRedYellow));
+            DicTypes.Add("D0", new TagType("D0", 320, 240, "ET0240C-D0", ColorType.Black));
         }
     }
 }

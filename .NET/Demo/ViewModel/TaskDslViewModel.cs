@@ -91,11 +91,17 @@ namespace Demo_WPF.ViewModel
             var bytes = File.Exists(Dsl.Path) ? File.ReadAllBytes(Dsl.Path) : [];
             var result = SendResult.Unknown;
 
+            if (Dsl.Pattern == Pattern.ClearGif)
+            {
+                bytes = [];
+            }
+
             if (bytes.Length > 0xFFFF)
             {
                 MsgHelper.Error("File_Too_Large");
                 return;
             }
+            
             switch (arg.ToString())
             {
                 case "0":
@@ -165,7 +171,7 @@ namespace Demo_WPF.ViewModel
         /// <returns>Result</returns>
         private bool CanPublish(object obj)
         {
-            return File.Exists(Dsl.Path);
+            return (Dsl.Pattern == Pattern.UpdateDisplay || Dsl.Pattern == Pattern.UpdateImage) ? File.Exists(Dsl.Path) : true;
         }
     }
 }

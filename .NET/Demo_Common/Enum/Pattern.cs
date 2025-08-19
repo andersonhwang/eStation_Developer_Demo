@@ -30,10 +30,6 @@ namespace Demo_Common.Enum
         /// </summary>
         ClearGif,
         /// <summary>
-        /// TFT240: Update image, keep gif
-        /// </summary>
-        UpdateImage,
-        /// <summary>
         /// TFT240: Update image, clear gif
         /// </summary>
         ClearGifUpdateImage,

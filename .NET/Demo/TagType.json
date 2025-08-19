@@ -401,17 +401,17 @@
   },
   {
     "Code": "71",
-    "Height": 144,
+    "Height": 200,
     "Width": 200,
-    "Length": 115200,
+    "Length": 160000,
     "Type": "ET0154H-71",
     "Color": 3
   },
   {
     "Code": "73",
     "Height": 200,
-    "Width": 200,
-    "Length": 160000,
+    "Width": 144,
+    "Length": 115200,
     "Type": "ET0130H-73",
     "Color": 3
   },

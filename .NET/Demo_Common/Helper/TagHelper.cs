@@ -128,8 +128,8 @@ namespace Demo_Common.Helper
             DicTypes.Add("68", new TagType("68", 960, 680, "ET1330-68", ColorType.BlackRed));
             DicTypes.Add("69", new TagType("69", 184, 88, "ET0097-69", ColorType.BlackRed));
             DicTypes.Add("6F", new TagType("6F", 792, 272, "ET0579-6F", ColorType.BlackRed));
-            DicTypes.Add("71", new TagType("71", 200, 144, "ET0154H-71"));
-            DicTypes.Add("73", new TagType("73", 200, 200, "ET0130H-73"));
+            DicTypes.Add("71", new TagType("71", 200, 200, "ET0154H-71"));
+            DicTypes.Add("73", new TagType("73", 200, 144, "ET0130H-73"));
             DicTypes.Add("80", new TagType("80", 200, 200, "ET0154-80", ColorType.BlackRedYellow));
             DicTypes.Add("81", new TagType("81", 250, 122, "ET0213-81", ColorType.BlackRedYellow));
             DicTypes.Add("82", new TagType("82", 296, 152, "ET0266-82", ColorType.BlackRedYellow));

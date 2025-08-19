@@ -171,7 +171,7 @@ namespace Demo_WPF.ViewModel
         /// <returns>Result</returns>
         private bool CanPublish(object obj)
         {
-            return (Dsl.Pattern == Pattern.UpdateDisplay || Dsl.Pattern == Pattern.UpdateImage) ? File.Exists(Dsl.Path) : true;
+            return (Dsl.Pattern == Pattern.UpdateDisplay || Dsl.Pattern == Pattern.ClearGifUpdateImage) ? File.Exists(Dsl.Path) : true;
         }
     }
 }

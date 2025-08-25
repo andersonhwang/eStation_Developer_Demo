@@ -39,7 +39,7 @@ def on_message(client, userdata, msg):
     print(f"[Recv] Topic: {msg.topic}")
     match msg.topic:
         case appConfig.TOPIC_INFOR:
-            infor = eStationInfor.eStationInfor.from_msgpack(msg.payload)
+            infor = eStationInfor.from_msgpack(msg.payload)
             print(f"eStation Infor: {infor}")
             return
         case appConfig.TOPIC_RESULT:
@@ -95,30 +95,68 @@ def publish_config(client, alias, server, userName, password, encrypt, autoIP, l
 
 # Function to publish ESL message
 def publish_esl(client, id, token, image, r, g, b):
-    esl = [ESLEntity(
-        TagID=id, 
-        Token=token,
-        Pattern=Patterns.UpdateDisplay.value, 
-        PageIndex=PageIndexes.P0.value, 
-        Base64String=base64.b64encode(read_file(image, False)),
-        R=r, 
-        G=g, 
-        B=b)]
-    data = msgpack.packb([e.__dict__ for e in esl])
+    image_bytes = read_file(image, False)
+    base64_str = base64.b64encode(image_bytes).decode('utf-8')
+    esl_list = [
+        ESLEntity(
+            TagID=id, 
+            Token=token,
+            Pattern=Patterns.UpdateDisplay.value, 
+            PageIndex=PageIndexes.P0.value, 
+            Base64String=base64_str,
+            R=r, 
+            G=g, 
+            B=b
+        )
+    ]
+    data = msgpack.packb([
+        [
+            e.TagID,
+            e.Pattern,
+            e.PageIndex,
+            e.R,
+            e.G,
+            e.B,
+            e.Times,
+            e.Token,
+            e.CurrentKey,
+            e.NewKey,
+            e.Base64String
+        ] for e in esl_list
+    ])
     client.publish(appConfig.TOPIC_TASK_ESL, data)
 
 # Function to publish ESL2 message
 def publish_esl2(client, id, token, image, r, g, b):
-    esl = [ESLEntity2(
-        TagID=id, 
-        Token=token,
-        Pattern=Patterns.UpdateDisplay.value, 
-        PageIndex=PageIndexes.P0.value, 
-        HexData=base64.b64encode(read_file(image, True)),
-        R=r, 
-        G=g, 
-        B=b)]
-    data = msgpack.packb([e.__dict__ for e in esl])
+    image_bytes = read_file(image, True)
+    esl_list = [
+        ESLEntity2(
+            TagID=id, 
+            Token=token,
+            Pattern=Patterns.UpdateDisplay.value, 
+            PageIndex=PageIndexes.P0.value, 
+            Bytes=image_bytes,
+            Compress=True,  # Compress is true
+            R=r, 
+            G=g, 
+            B=b
+        )
+    ]
+    data = msgpack.packb([
+        [
+            e.TagID,
+            e.Pattern,
+            e.PageIndex,
+            e.R,
+            e.G,
+            e.B,
+            e.Times,
+            e.Token,
+            e.CurrentKey,
+            e.NewKey,
+            e.HexData
+        ] for e in esl_list
+    ])
     client.publish(appConfig.TOPIC_TASK_ESL2, data)
 
 # Main function

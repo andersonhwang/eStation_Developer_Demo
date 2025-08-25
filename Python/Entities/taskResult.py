@@ -1,7 +1,7 @@
 import msgpack
 from dataclasses import dataclass, field
 from typing import List
-from Entities.tagResult import TagResult
+from .tagResult import TagResult
 
 @dataclass
 class TaskResult:

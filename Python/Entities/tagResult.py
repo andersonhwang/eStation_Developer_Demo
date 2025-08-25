@@ -35,9 +35,15 @@ class TagResult:
         ]
         return msgpack.packb(data)
 
+    # ...existing code...
+
     @staticmethod
-    def from_msgpack(packed: bytes):
-        data = msgpack.unpackb(packed)
+    def from_msgpack(packed):
+        # Accept either bytes or a list
+        if isinstance(packed, bytes):
+            data = msgpack.unpackb(packed)
+        else:
+            data = packed
         return TagResult(
             TagId=data[0],
             RfPower=data[1],

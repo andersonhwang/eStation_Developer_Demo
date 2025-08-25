@@ -2,7 +2,7 @@ import msgpack
 from dataclasses import dataclass, field
 from typing import List
 from Enums.messageCode import MessageCodes
-from Entities.tagHeartbeat import TagHeartbeat
+from .tagHeartbeat import TagHeartbeat
 
 @dataclass
 class ApHeartbeat:

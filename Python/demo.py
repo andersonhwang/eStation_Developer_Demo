@@ -71,13 +71,15 @@ def read_file(file_path, compress):
     try:
         with open(file_path, 'rb') as file:
             content = file.read()
+            if compress:
+                content = gzip.compress(content)
             return content
     except FileNotFoundError:
         print(f"File {file_path} not found.")
         return array.array('B')
     
 # Function to configure AP
-def publish_config(client, alias, server, userName, password, encrypt, autoIP, localIP, subnetMask, gateway, heartbeat):
+def publish_config(client, alias, server, userName, password, encrypt, autoIP, localIP, subnet, gateway, heartbeat):
     config = eStationConfig(
         Alias=alias,
         Server=server,
@@ -85,41 +87,51 @@ def publish_config(client, alias, server, userName, password, encrypt, autoIP, l
         Encrypt=encrypt,
         AutoIP=autoIP,
         LocalIP=localIP,
-        SubnetMask=subnetMask,
+        Subnet=subnet,
         Gateway=gateway,
         Heartbeat=heartbeat
     )
     client.publish(appConfig.TOPIC_CONFIG, config.to_msgpack())
 
 # Function to publish ESL message
-def publish_esl(client, id, image, r, g, b):
-    esl = [eslEntity(
+def publish_esl(client, id, token, image, r, g, b):
+    esl = [ESLEntity(
         TagID=id, 
-        Token=get_token(),
-        Pattern=Patterns.UpdateDisplay, 
-        PageIndex=PageIndexes.P0, 
-        Base64String=base64.b64encode(read_file(image)),
+        Token=token,
+        Pattern=Patterns.UpdateDisplay.value, 
+        PageIndex=PageIndexes.P0.value, 
+        Base64String=base64.b64encode(read_file(image, False)),
         R=r, 
         G=g, 
         B=b)]
-    client.publish(appConfig.TOPIC_TASK_ESL, esl.to_msgpack())
+    data = msgpack.packb([e.__dict__ for e in esl])
+    client.publish(appConfig.TOPIC_TASK_ESL, data)
 
 # Function to publish ESL2 message
 def publish_esl2(client, id, token, image, r, g, b):
-    esl = [eslEntity2(
+    esl = [ESLEntity2(
         TagID=id, 
         Token=token,
-        Pattern=Patterns.UpdateDisplay, 
-        PageIndex=PageIndexes.P0, 
-        HexData=base64.b64encode(read_file(image)),
+        Pattern=Patterns.UpdateDisplay.value, 
+        PageIndex=PageIndexes.P0.value, 
+        HexData=base64.b64encode(read_file(image, True)),
         R=r, 
         G=g, 
         B=b)]
-    client.publish(appConfig.TOPIC_TASK_ESL2, esl.to_msgpack())
+    data = msgpack.packb([e.__dict__ for e in esl])
+    client.publish(appConfig.TOPIC_TASK_ESL2, data)
 
 # Main function
 def main():
     print("Starting eStation Demo(Python)...")
+    print("0: Publish Config")
+    print("1: Publish ESL")
+    print("2: Publish ESL2")
+    print("3: Publish DSL(TODO)")
+    print("4: Publish DSL2(TODO)")
+    print("5: Publish Firmware(TODO)")
+    print("6: Publish OTA(TODO")
+    print("Press 'E' to exit.")
 
     # Configure your client connection parameters in appConfig.py
     client = mqtt.Client(
@@ -160,33 +172,36 @@ def main():
                     return
                 code = int(user_input)
                 match code:
-                    case 1:
+                    case 0:
                         publish_config(client, alias, server, userName, password, encrypt, autoIP, localIP, subnetMask, gateway, heartbeat)
-                        break
-                    case 2:
+                        continue
+                    case 1:
                         publish_esl(client, tag_id, get_token(), test_image, True, False, False)
-                        break
-                    case 3:
+                        continue
+                    case 2:
                         publish_esl2(client, tag_id, get_token(), test_image, False, True, False)
-                        break
-                    case 4:
+                        continue
+                    case 3:
                         # TODO: Implement DSL publish function
-                        break
-                    case 5:
+                        continue
+                    case 4:
                          # TODO: Implement DSL2 publish function
-                         break
-                    case 6:
+                         continue
+                    case 5:
                         # TODO: Implement firmware publish function
-                        break
-                    case 7:
+                        continue
+                    case 6:
                         # TODO: Implement OTA publish function
-                        break
+                        continue
                     case _:
                         print("Unknown code.")
+                        break
             except ValueError:
                 print("Invalid input. Please enter a valid code.")
+                continue
             except KeyboardInterrupt:
                 print("Exiting...")
+                break
     finally:
         client.loop_stop()
         client.disconnect()

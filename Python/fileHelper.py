@@ -19,7 +19,7 @@ def read_bmp_to_bytes(file_path):
 
         # Image Information
         width = struct.unpack('<i', info_header[4:8])[0]
-        height = struct.unpack('<i', info_header[8:12])[0]
+        height = abs(struct.unpack('<i', info_header[8:12])[0])
         bits_per_pixel = struct.unpack('<H', info_header[14:16])[0]
 
         # Check if the bit depth is supported

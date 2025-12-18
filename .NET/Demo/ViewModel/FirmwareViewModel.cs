@@ -115,8 +115,8 @@ namespace Demo_WPF.ViewModel
                 var ap = SendService.Instance.CurrentAP;
                 var ota = new OTAData()
                 {
-                    ConfirmUrl = $"http://{ip}/confirm/{ap}/{Data.NameM}",
-                    DownloadUrl = $"http://{ip}/ota/{Data.NameM}",
+                    ConfirmUrl = $"http://{ip}/confirm/{ap}/{Data.NameM}?code=1&flag=A",
+                    DownloadUrl = $"http://{ip}/ota/{Data.NameM}?code=2&flag=B",
                     MD5 = Data.MD5,
                     Name = Data.Name,
                     Type = Data.Type,

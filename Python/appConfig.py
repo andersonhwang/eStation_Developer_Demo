@@ -1,6 +1,6 @@
 BROKER = "127.0.0.1"    # MQTT broker address
 PORT = 9071             # Port
-AP_ID = "018Q"          # AP ID
+AP_ID = "00C8"          # AP ID
 USER_NAME = "test"      # User name
 PASSWORD = "123456"     # Password
 

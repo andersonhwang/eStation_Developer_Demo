@@ -1,5 +1,3 @@
-
-
 import paho.mqtt.client as mqtt
 import time
 import array
@@ -7,7 +5,12 @@ import base64
 import random
 import msgpack
 import gzip
+import hashlib
 
+from pathlib import Path
+from PIL import Image
+
+from Entities.apOta import OTAData
 from Entities.eStationConfig import eStationConfig
 from Entities.eStationInfor import eStationInfor
 from Entities.eStationMessage import eStationMessage
@@ -49,8 +52,9 @@ def on_message(client, userdata, msg):
             print(f"eStation Result: {result}")
             return
         case appConfig.TOPIC_HEARTBEAT:
-            heartbeat = ApHeartbeat.from_msgpack(msg.payload)
-            print(f"eStation Heartbeat: {heartbeat}")
+            # If you want to display heartbeat info, you can uncomment the following lines. Note that heartbeat messages are sent every 60 seconds by default, so it may flood your console if you print every heartbeat.
+            # heartbeat = ApHeartbeat.from_msgpack(msg.payload)
+            # print(f"eStation Heartbeat: {heartbeat}")
             return
         case appConfig.TOPIC_MESSAGE:
             message = eStationMessage.from_msgpack(msg.payload)
@@ -67,6 +71,29 @@ def get_token():
     if token >= 0xFFFF:
         token = 0
     return token
+
+def read_image_bgra(file_path):
+    with Image.open(file_path) as img:
+        img = img.convert("RGBA")  # RGBA
+
+        width, height = img.size
+        rgba = img.tobytes()
+
+        # 转 BGRA
+        bgra = bytearray(len(rgba))
+
+        for i in range(0, len(rgba), 4):
+            r = rgba[i]
+            g = rgba[i + 1]
+            b = rgba[i + 2]
+            a = rgba[i + 3]
+
+            bgra[i] = b
+            bgra[i + 1] = g
+            bgra[i + 2] = r
+            bgra[i + 3] = a
+
+        return bytes(bgra), (width, height)
     
 # Function to configure AP
 def publish_config(client, alias, server, userName, password, encrypt, autoIP, localIP, subnet, gateway, heartbeat):
@@ -85,7 +112,7 @@ def publish_config(client, alias, server, userName, password, encrypt, autoIP, l
 
 # Function to publish ESL message
 def publish_esl(client, id, token, image, r, g, b):
-    image_bytes = fileHelper.read_bmp_to_bytes(image)
+    image_bytes = read_image_bgra(image)
     base64_str = base64.b64encode(image_bytes[0]).decode('utf-8')
     esl_list = [
         ESLEntity(
@@ -118,8 +145,10 @@ def publish_esl(client, id, token, image, r, g, b):
 
 # Function to publish ESL2 message
 def publish_esl2(client, id, token, image, r, g, b):
-    image_bytes = fileHelper.read_bmp_to_bytes(image)
-    print(len(image_bytes[0]))
+    #0. BGRA data
+    # image_bytes = read_image_bgra(image)
+    #1. File bytes
+    image_bytes = open(image, 'rb').read(),
     esl_list = [
         ESLEntity2(
             TagID=id, 
@@ -151,6 +180,27 @@ def publish_esl2(client, id, token, image, r, g, b):
     ])
     client.publish(appConfig.TOPIC_TASK_ESL2, data)
 
+# Function to publish OTA message
+def publish_ota(client, path, version, downloadUrl, confirmUrl):
+    p = Path(path)
+    ota = OTAData(
+        download_url=downloadUrl,
+        confirm_url=confirmUrl,
+        type=0,
+        version=version,
+        name=p.name,
+        md5= str.upper(calc_md5(path))
+    )
+    client.publish(appConfig.TOPIC_FIRMWARE, ota.to_msgpack())
+
+# Function to calculate MD5 checksum of a file
+def calc_md5(file_path: str) -> str:
+    md5 = hashlib.md5()
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            md5.update(chunk)
+    return md5.hexdigest()
+
 # Main function
 def main():
     print("Starting eStation Demo(Python)...")
@@ -159,8 +209,8 @@ def main():
     print("2: Publish ESL2")
     print("3: Publish DSL(TODO)")
     print("4: Publish DSL2(TODO)")
-    print("5: Publish Firmware(TODO)")
-    print("6: Publish OTA(TODO")
+    print("5: Publish ESL OTA(TODO)")
+    print("6: Publish Firmware OTA")
     print("Press 'E' to exit.")
 
     # Configure your client connection parameters in appConfig.py
@@ -180,19 +230,24 @@ def main():
     client.loop_start()
         
     global token
-    token = random.randint(1, 0xFFFF)       # Init token
-    tag_id = "82000088A2C8"                 # Test tag ID
-    alias = "09"                            # Alias
-    server = "192.168.10.100:9071"          # MQTT server
-    userName = "test"                       # Username
-    password = "123456"                     # Password
-    encrypt = False                         # Encryption
-    autoIP = False                          # Auto IP
-    localIP = "192.168.10.101"              # Local IP
-    subnetMask = "255.255.255.0"            # Subnet Mask
-    gateway = "192.168.10.1"                # Gateway
-    heartbeat = 60                          # Heartbeat
-    test_image = "T1.bmp"                   # Test image
+    token = random.randint(1, 0xFFFF)           # Init token
+    tag_id = "82000088A2C8"                     # Test tag ID  - 4 colors
+    tag_id2 = "A00000CA8033"                    # Test tag ID - 6 colors
+    alias = "09"                                # Alias
+    server = "192.168.4.74:9071"                # MQTT server
+    userName = "test"                           # Username
+    password = "123456"                         # Password
+    encrypt = False                             # Encryption
+    autoIP = False                              # Auto IP
+    localIP = "192.168.4.101"                   # Local IP
+    subnetMask = "255.255.255.0"                # Subnet Mask
+    gateway = "192.168.4.1"                     # Gateway
+    heartbeat = 60                              # Heartbeat
+    test_image = "T1.bmp"                       # Test image - 4 colors
+    test_image2 = "T2.bmp"                      # Test image - 6 colors
+
+    ota_download_url = "http://192.168.4.74:9070/ota/2/eStation2.1.0.44.OTA.tar?id={0}&time={1}"
+    ota_confirm_url = "http://192.168.4.74:9070/confirm?id={0}&time={1}"
 
     try:
         while True:
@@ -209,7 +264,7 @@ def main():
                         publish_esl(client, tag_id, get_token(), test_image, True, False, False)
                         continue
                     case 2:
-                        publish_esl2(client, tag_id, get_token(), test_image, False, True, False)
+                        publish_esl2(client, tag_id2, get_token(), test_image2, False, True, False)
                         continue
                     case 3:
                         # TODO: Implement DSL publish function
@@ -221,7 +276,13 @@ def main():
                         # TODO: Implement firmware publish function
                         continue
                     case 6:
-                        # TODO: Implement OTA publish function
+                        publish_ota(
+                            client, 
+                            "/Users/andersonh/Documents/GitHub/eStation/OTA/AP_OTA/eStation2.1.0.44.OTA.tar", 
+                            "1.0.44", 
+                            str.format(ota_download_url, "0001", int(time.time())),
+                            str.format(ota_confirm_url, "0001", int(time.time()))
+                        )
                         continue
                     case _:
                         print("Unknown code.")

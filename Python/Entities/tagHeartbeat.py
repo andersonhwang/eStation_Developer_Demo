@@ -40,11 +40,17 @@ class TagHeartbeat:
             self.Size,
             self.Type
         ]
-        return msgpack.packb(data)
+        return msgpack.packb(data, use_bin_type=True)
 
     @staticmethod
-    def from_msgpack(packed: bytes):
-        data = msgpack.unpackb(packed)
+    def from_msgpack(packed):
+        if isinstance(packed, (bytes, bytearray, memoryview)):
+            data = msgpack.unpackb(packed, raw=False)
+        elif isinstance(packed, (list, tuple)):
+            data = packed
+        else:
+            raise TypeError(f"TagHeartbeat.from_msgpack expects bytes or list, got {type(packed).__name__}")
+
         return TagHeartbeat(
             TagId=data[0],
             RfPower=data[1],

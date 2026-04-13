@@ -16,7 +16,7 @@ password_file Your_Password_File_Path_Here  # Pasword file path
 listener XXXX                               # The MQTT port
 max_topic_alias 255                         # The default value is 10, need change to 255
 
-# 2. Pyton
+# 2. Python
 >> Start file: demo.py
 ```Python
 # Demo parameters - You can modify these parameters for testing

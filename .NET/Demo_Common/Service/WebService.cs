@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -41,10 +42,11 @@ namespace Demo_Common.Service
                 var app = builder.Build();
                 app.UseResponseCaching();
                 app.MapGet("/test", () => "HelloWorld").WithName("Test");
-                app.MapGet("/ota/{key}", (string key) =>
+                app.MapGet("/ota/{key}", (string key, [FromQuery(Name = "code")] int code, [FromQuery(Name = "flag")] string flag) =>
                 {
                     try
                     {
+                        Log.Information($"OTA_{key}_Start, Code={code}, Flag={flag}");
                         if (Firmwares.ContainsKey(key))
                         {
                             return Results.File(Path.GetFullPath(Firmwares[key]));
@@ -57,9 +59,9 @@ namespace Demo_Common.Service
                     }
                     return Results.StatusCode(404);
                 }).WithName("Ota");
-                app.MapGet("/confirm/{key}/{id}", (string key, string id) =>
+                app.MapGet("/confirm/{key}/{id}", (string key, string id, [FromQuery(Name ="code")]int code, [FromQuery(Name ="flag")]string flag) =>
                 {
-                    Log.Information($"OTA_{key}_{id}_OK");  // Just mean AP download Firmware OK
+                    Log.Information($"OTA_{key}_{id}_OK, Code={code}, Flag={flag}");  // Just mean AP download Firmware OK
                     SendService.Instance.DownloadConfirm(key, id);
                     return Results.Ok(id);
                 }).WithName("Confirm");

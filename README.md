@@ -18,7 +18,8 @@ max_topic_alias 255                         # The default value is 10, need chan
 
 # 2. Pyton
 >> Start file: demo.py
-'''# Demo parameters - You can modify these parameters for testing
+```Python
+# Demo parameters - You can modify these parameters for testing
 token = random.randint(1, 0xFFFF)           # Init token
 tag_id = "82000088A2C8"                     # Test tag ID  - 4 colors
 tag_id2 = "A00000CA8033"                    # Test tag ID - 6 colors
@@ -36,12 +37,12 @@ localIP = "192.168.4.101"                   # Local IP
 subnetMask = "255.255.255.0"                # Subnet Mask
 gateway = "192.168.4.1"                     # Gateway
 heartbeat = 60                              # Heartbeat
-'''
+```
 
 >> Run demo.py
-'''
+```Python
 python3 demo.py
-'''
+```
 
 # 3. Understand the E-ink screen
 ...

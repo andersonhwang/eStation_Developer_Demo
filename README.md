@@ -1,16 +1,23 @@
 # eStation Developer Edition
-Welcome to eStation(AP05) Developer Edition! 
+Welcome to eStation Developer Edition! 
 
 eStation is designed for developers to quick integerate ETAG ESL&DSL with their projects. eStation use MQTT protocol and esay to configure/integerate.
 
-Release Date: 2024-08-08
+Release Date: 2026-04-13
 
-AP Firmware: 1.1.0
+Firmware: 1.1.44
 
-Demo Languages: C#, Java, Python, Rust
+# 1. Work with Mosquitto
 
-API Docuement: D21 eStation Developer Guidline
+If you are working with Mosquitton, you need edit the Mosquitto configure file mosquitto.conf:
 
-1. Quick Start
+allow_anonymous false  
+password_file Your_Password_File_Path_Here  # Pasword file path
+listener XXXX                               # The MQTT port
+max_topic_alias 255                         # The default value is 10, need change to 255
 
-2. Topics
+# 2. Understand the Image size
+...
+
+# 3. Understand the E-ink screen
+...

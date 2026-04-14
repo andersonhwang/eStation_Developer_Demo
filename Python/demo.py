@@ -25,6 +25,28 @@ from Entities.apHeartbeat import ApHeartbeat
 import appConfig    # Your application configuration
 import fileHelper
 
+# Demo parameters - You can modify these parameters for testing
+token = random.randint(1, 0xFFFF)           # Init token
+tag_id = "82000088A2C8"                     # Test tag ID  - 4 colors
+tag_id2 = "A00000CA8033"                    # Test tag ID - 6 colors
+tag_id3= "810000AB114B"                    # Test tag ID - 2.13inch, 250*122
+test_image = "T1.bmp"                       # Test image - 4 colors
+test_image2 = "T2.bmp"                      # Test image - 6 colors
+test_image3A = "T3A.bmp"                    # Test image - BGRA32
+test_image3B = "T3B.bmp"                    # Test image - BGR24
+
+# AP Config parameters - Modify these parameters according to your network environment
+alias = "09"                                # Alias
+server = "192.168.4.74:9071"                # MQTT server
+userName = "test"                           # Username
+password = "123456"                         # Password
+encrypt = False                             # Encryption
+autoIP = False                              # Auto IP
+localIP = "192.168.4.101"                   # Local IP
+subnetMask = "255.255.255.0"                # Subnet Mask
+gateway = "192.168.4.1"                     # Gateway
+heartbeat = 60                              # Heartbeat
+
 
 # Callback when the client receives a CONNACK response from the server
 def on_connect(client, userdata, flags, reason_code, properties):
@@ -63,7 +85,6 @@ def on_message(client, userdata, msg):
         case _:
             return
 
-token = 0
 # Function to get the next token
 def get_token():
     global token
@@ -72,6 +93,7 @@ def get_token():
         token = 0
     return token
 
+# Read image and convert to BGRA32 byte array
 def read_image_bgra(file_path):
     with Image.open(file_path) as img:
         img = img.convert("RGBA")  # RGBA
@@ -94,6 +116,28 @@ def read_image_bgra(file_path):
             bgra[i + 3] = a
 
         return bytes(bgra), (width, height)
+    
+# Read image and convert to BGR24 byte array 
+def read_image_bgr(file_path):
+    with Image.open(file_path) as img:
+        img = img.convert("RGB")  # RGBA
+
+        width, height = img.size
+        rgb = img.tobytes()
+
+        # 转 BGR
+        bgr = bytearray(len(rgb))
+
+        for i in range(0, len(rgb), 3):
+            r = rgb[i]
+            g = rgb[i + 1]
+            b = rgb[i + 2]
+
+            bgr[i] = b
+            bgr[i + 1] = g
+            bgr[i + 2] = r
+
+        return bytes(bgr), (width, height)
     
 # Function to configure AP
 def publish_config(client, alias, server, userName, password, encrypt, autoIP, localIP, subnet, gateway, heartbeat):
@@ -144,11 +188,15 @@ def publish_esl(client, id, token, image, r, g, b):
     client.publish(appConfig.TOPIC_TASK_ESL, data)
 
 # Function to publish ESL2 message
+# Topic taskESL2 supports BGRA32, BGR24 and file bytes. 
+# You can choose the data format by commenting/uncommenting the corresponding lines in the function. 
 def publish_esl2(client, id, token, image, r, g, b):
-    #0. BGRA data
-    # image_bytes = read_image_bgra(image)
-    #1. File bytes
-    image_bytes = open(image, 'rb').read(),
+    #0. BGRA32 data
+    image_bytes = read_image_bgra(image)
+    #1. BGR24 data
+    image_bytes = read_image_bgr(image)
+    #2. File bytes
+    # image_bytes = open(image, 'rb').read(),
     esl_list = [
         ESLEntity2(
             TagID=id, 
@@ -228,23 +276,6 @@ def main():
 
     # Start the loop in a separate thread
     client.loop_start()
-        
-    global token
-    token = random.randint(1, 0xFFFF)           # Init token
-    tag_id = "82000088A2C8"                     # Test tag ID  - 4 colors
-    tag_id2 = "A00000CA8033"                    # Test tag ID - 6 colors
-    alias = "09"                                # Alias
-    server = "192.168.4.74:9071"                # MQTT server
-    userName = "test"                           # Username
-    password = "123456"                         # Password
-    encrypt = False                             # Encryption
-    autoIP = False                              # Auto IP
-    localIP = "192.168.4.101"                   # Local IP
-    subnetMask = "255.255.255.0"                # Subnet Mask
-    gateway = "192.168.4.1"                     # Gateway
-    heartbeat = 60                              # Heartbeat
-    test_image = "T1.bmp"                       # Test image - 4 colors
-    test_image2 = "T2.bmp"                      # Test image - 6 colors
 
     ota_download_url = "http://192.168.4.74:9070/ota/2/eStation2.1.0.44.OTA.tar?id={0}&time={1}"
     ota_confirm_url = "http://192.168.4.74:9070/confirm?id={0}&time={1}"

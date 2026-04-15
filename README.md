@@ -45,5 +45,38 @@ heartbeat = 60                              # Heartbeat
 python3 demo.py
 ```
 
-# 3. Understand the E-ink screen
-...
+# 3. Java
+
+The Java demo is a copy of Python demo, convert by CodeX.
+
+> Start file: DemoApp.java
+```Java
+    // Demo parameters - these can be modified as needed for testing. 
+    // The tag IDs should correspond to actual tags in your environment if you want to see the updates reflected on real devices. 
+    // The image paths should point to valid image files on your system.
+    private static final String TAG_ID = "82000088A2C8";
+    private static final String TAG_ID_2 = "A00000CA8033";
+    private static final String TAG_ID_3 = "810000AB114B";
+
+    private static final Path TEST_IMAGE = Path.of("src/main/java/com/estation/demo/images/T1.bmp");
+    private static final Path TEST_IMAGE_2 = Path.of("src/main/java/com/estation/demo/images/T2.bmp");
+    private static final Path TEST_IMAGE_3_A = Path.of("src/main/java/com/estation/demo/images/T3A.bmp");
+    private static final Path TEST_IMAGE_3_B = Path.of("src/main/java/com/estation/demo/images/T3B.bmp");
+
+    // ApConfiguration parameters - adjust these to match your MQTT broker and network settings.
+    private static final String ALIAS = "09";
+    private static final String SERVER = "192.168.4.74:9071";
+    private static final String USER_NAME = "test";
+    private static final String PASSWORD = "123456";
+    private static final boolean ENCRYPT = false;
+    private static final boolean AUTO_IP = false;
+    private static final String LOCAL_IP = "192.168.4.101";
+    private static final String SUBNET_MASK = "255.255.255.0";
+    private static final String GATEWAY = "192.168.4.1";
+    private static final int HEARTBEAT = 60;
+```
+
+> Run Demo
+```Java
+java -jar target/estation-demo-1.0.0.jar
+```

@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "type": "java",
+        "name": "DemoApp",
+        "request": "launch",
+        "mainClass": "src.main.java.com.estation.demo.DemoApp",
+        "projectName": "Java_180fcf2e"
+    },
+    {
+        "type": "java",
+        "name": "Debug eStation Demo",
+        "request": "launch",
+        "mainClass": "com.estation.demo.DemoApp"
+    }
+]
+}

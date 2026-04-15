@@ -30,10 +30,10 @@ token = random.randint(1, 0xFFFF)           # Init token
 tag_id = "82000088A2C8"                     # Test tag ID  - 4 colors
 tag_id2 = "A00000CA8033"                    # Test tag ID - 6 colors
 tag_id3= "810000AB114B"                    # Test tag ID - 2.13inch, 250*122
-test_image = "T1.bmp"                       # Test image - 4 colors
-test_image2 = "T2.bmp"                      # Test image - 6 colors
-test_image3A = "T3A.bmp"                    # Test image - BGRA32
-test_image3B = "T3B.bmp"                    # Test image - BGR24
+test_image = "Images/T1.bmp"                       # Test image - 4 colors
+test_image2 = "Images/T2.bmp"                      # Test image - 6 colors
+test_image3A = "Images/T3A.bmp"                    # Test image - BGRA32
+test_image3B = "Images/T3B.bmp"                    # Test image - BGR24
 
 # AP Config parameters - Modify these parameters according to your network environment
 alias = "09"                                # Alias

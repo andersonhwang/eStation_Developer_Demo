@@ -34,6 +34,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public final class DemoApp {
     private static final AtomicInteger TOKEN = new AtomicInteger(new Random().nextInt(0xFFFF));
 
+    // Demo parameters - these can be modified as needed for testing. 
+    // The tag IDs should correspond to actual tags in your environment if you want to see the updates reflected on real devices. 
+    // The image paths should point to valid image files on your system.
     private static final String TAG_ID = "82000088A2C8";
     private static final String TAG_ID_2 = "A00000CA8033";
     private static final String TAG_ID_3 = "810000AB114B";
@@ -43,6 +46,7 @@ public final class DemoApp {
     private static final Path TEST_IMAGE_3_A = Path.of("src/main/java/com/estation/demo/images/T3A.bmp");
     private static final Path TEST_IMAGE_3_B = Path.of("src/main/java/com/estation/demo/images/T3B.bmp");
 
+    // ApConfiguration parameters - adjust these to match your MQTT broker and network settings.
     private static final String ALIAS = "09";
     private static final String SERVER = "192.168.4.74:9071";
     private static final String USER_NAME = "test";

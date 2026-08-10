@@ -7,7 +7,10 @@ using MQTTnet.Protocol;
 using MQTTnet.Server;
 using Serilog;
 using System.Net;
+using System.Net.Security;
 using System.Security.Authentication;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 namespace Demo_Common.Service
@@ -16,7 +19,7 @@ namespace Demo_Common.Service
     {
         private readonly Action<string, string, ApStatus> ApStatusHandler;
         private readonly Action<ApData> ApDataHandler;
-        private readonly ConnInfo Connection;
+        private readonly ConnInfo Conn;
         private MqttServer mqttServer;
 
         /// <summary>
@@ -27,7 +30,7 @@ namespace Demo_Common.Service
         /// <param name="actData">AP data handler</param>
         public MQTT(ConnInfo info, Action<string, string, ApStatus> actStatus, Action<ApData> actData)
         {
-            Connection = info;
+            Conn = info;
             ApStatusHandler = actStatus;
             ApDataHandler = actData;
         }
@@ -40,21 +43,33 @@ namespace Demo_Common.Service
         {
             try
             {
-                var builder = new MqttServerOptionsBuilder()
-                        .WithDefaultEndpoint();
-                if (Connection.Encrypt)
+                var builder = new MqttServerOptionsBuilder();
+                if (Conn.Encrypt)
                 {
+                    var cert = X509Certificate2.CreateFromPemFile(Conn.Certificate, Conn.CertificateKey);
+                    Log.Information(
+                        "Certificate Subject={Subject}, Issuer={Issuer}, HasPrivateKey={HasPrivateKey}, Thumbprint={Thumbprint}",
+                        cert.Subject,
+                        cert.Issuer,
+                        cert.HasPrivateKey,
+                        cert.Thumbprint);
                     builder = builder
                         .WithEncryptedEndpoint()
-                        .WithEncryptedEndpointPort(Connection.Port)
-                        .WithEncryptionCertificate(FileHelper.GetCertificate(Connection.Certificate, Connection.CertificateKey))
+                        .WithEncryptedEndpointPort(Conn.Port)
+                        .WithEncryptionCertificate(cert)
                         .WithEncryptionSslProtocol(SslProtocols.Tls12);
+                    if (Conn.mTLS)
+                    {
+                        builder = builder.WithClientCertificate(ValidateClientCertificate, false);
+                    }
                 }
                 else
                 {
                     builder = builder
-                        .WithDefaultEndpointPort(Connection.Port);
+                        .WithDefaultEndpoint()
+                        .WithDefaultEndpointPort(Conn.Port);
                 }
+
                 var options = builder.Build();
                 mqttServer = new MqttServerFactory().CreateMqttServer(options);
                 mqttServer.ClientConnectedAsync += ClientConnectedAsync;
@@ -68,6 +83,82 @@ namespace Demo_Common.Service
             catch (Exception ex)
             {
                 Log.Error(ex, "MQTT_RUN_ERR");
+                return false;
+            }
+        }
+
+        private bool ValidateClientCertificate(
+            object sender,
+            X509Certificate? certificate,
+            X509Chain? originalChain,
+            SslPolicyErrors sslPolicyErrors)
+        {
+            if (certificate == null)
+            {
+                Log.Warning("MQTT_MTLS_NO_CLIENT_CERTIFICATE");
+                return false;
+            }
+
+            try
+            {
+                using var clientCertificate = new X509Certificate2(certificate);
+
+                using var rootCa =
+                    new X509Certificate2(Conn.RootCaCertificate);
+
+                using var issuingCa =
+                    new X509Certificate2(Conn.IssuingCaCertificate);
+
+                using var chain = new X509Chain();
+
+                chain.ChainPolicy.TrustMode =
+                    X509ChainTrustMode.CustomRootTrust;
+
+                chain.ChainPolicy.CustomTrustStore.Add(rootCa);
+
+                chain.ChainPolicy.ExtraStore.Add(issuingCa);
+
+                chain.ChainPolicy.RevocationMode =
+                    X509RevocationMode.NoCheck;
+
+                chain.ChainPolicy.VerificationFlags =
+                    X509VerificationFlags.NoFlag;
+
+                // Client Authentication EKU
+                chain.ChainPolicy.ApplicationPolicy.Add(
+                    new Oid("1.3.6.1.5.5.7.3.2"));
+
+                var valid = chain.Build(clientCertificate);
+
+                if (!valid)
+                {
+                    foreach (var status in chain.ChainStatus)
+                    {
+                        Log.Warning(
+                            "MQTT_MTLS_CLIENT_CERT_INVALID " +
+                            "Subject={Subject}, Thumbprint={Thumbprint}, " +
+                            "Status={Status}, Info={Info}",
+                            clientCertificate.Subject,
+                            clientCertificate.Thumbprint,
+                            status.Status,
+                            status.StatusInformation);
+                    }
+
+                    return false;
+                }
+
+                Log.Information(
+                    "MQTT_MTLS_CLIENT_CERT_OK " +
+                    "Subject={Subject}, Issuer={Issuer}, Thumbprint={Thumbprint}",
+                    clientCertificate.Subject,
+                    clientCertificate.Issuer,
+                    clientCertificate.Thumbprint);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "MQTT_MTLS_CLIENT_CERT_VALIDATE_ERR");
                 return false;
             }
         }
@@ -103,9 +194,9 @@ namespace Demo_Common.Service
         /// <returns>The task</returns>
         private Task ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
         {
-            arg.ReasonCode = arg.UserName == Connection.UserName && arg.Password == Connection.Password
+            arg.ReasonCode = arg.UserName == Conn.UserName && arg.Password == Conn.Password
                 ? MqttConnectReasonCode.Success
-                : MqttConnectReasonCode.UnspecifiedError;
+                : MqttConnectReasonCode.NotAuthorized;
 
             if (arg.ReasonCode == MqttConnectReasonCode.Success)
             {

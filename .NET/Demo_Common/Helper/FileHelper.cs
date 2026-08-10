@@ -65,7 +65,7 @@ namespace Demo_Common.Helper
         public static byte[] GetCertificate(string path, string key)
         {
             var x509 = new X509Certificate2(path, key, X509KeyStorageFlags.Exportable);
-            return x509.Export(X509ContentType.Pfx);
+            return x509.Export(X509ContentType.Cert);
         }
 
         /// <summary>

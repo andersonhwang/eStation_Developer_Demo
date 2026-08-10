@@ -11,6 +11,8 @@ from pathlib import Path
 from PIL import Image
 
 from Entities.apOta import OTAData
+from Entities.apSecurity import ApSecurity
+from Entities.dslEntity import DSLEntity
 from Entities.eStationConfig import eStationConfig
 from Entities.eStationInfor import eStationInfor
 from Entities.eStationMessage import eStationMessage
@@ -25,26 +27,45 @@ from Entities.apHeartbeat import ApHeartbeat
 import appConfig    # Your application configuration
 import fileHelper
 
+BASE_DIR = Path(__file__).resolve().parent
+
+# Web host configuration
+web_host_ip = "192.168.3.33"    # Replace with your actual web host IP address
+web_host_port = "9070"          # Replace with your actual web host port
+firmware_folder =  "Your_Firmware_Folder"   # Replace with your actual firmware folder path
+firmware_name = "eStation2.1.1.4.OTA.tar"   # Replace with your actual firmware package name
+cert_folder = "Your_Cert_Folder"            # Replace with your actual certificate folder path
+cert_name = "Your_Device_Cert_Package.zip"  # Replace with your actual certificate package name
+
+ota_download_url = f"http://{web_host_ip}:{web_host_port}/ota/2/{firmware_name}?id={{0}}&time={{1}}"
+cert_download_url = f"http://{web_host_ip}:{web_host_port}/cert/{{0}}" 
+confirm_url = f"http://{web_host_ip}:{web_host_port}/confirm?id={{0}}&time={{1}}"
+
 # Demo parameters - You can modify these parameters for testing
 token = random.randint(1, 0xFFFF)           # Init token
-tag_id = "82000088A2C8"                     # Test tag ID  - 4 colors
-tag_id2 = "A00000CA8033"                    # Test tag ID - 6 colors
-tag_id3= "810000AB114B"                    # Test tag ID - 2.13inch, 250*122
-test_image = "Images/T1.bmp"                       # Test image - 4 colors
-test_image2 = "Images/T2.bmp"                      # Test image - 6 colors
-test_image3A = "Images/T3A.bmp"                    # Test image - BGRA32
-test_image3B = "Images/T3B.bmp"                    # Test image - BGR24
+tag_id = "4C00000F6E70"                     # Test tag ID  - 4 colors
+tag_id2 = "4C00000F6E70"                    # Test tag ID - 6 colors
+tag_id3= "810000F48DAA"                     # Test tag ID - 2.13inch, 250*122
+test_image = BASE_DIR / "Images/4C.bmp"     # Test image - 4 colors
+test_image2 = BASE_DIR / "Images/4C.bmp"    # Test image - 6 colors
+test_image3A = BASE_DIR / "Images/T3A.bmp"  # Test image - BGRA32
+test_image3B = BASE_DIR / "Images/T3B.bmp"  # Test image - BGR24
+dsl_id_lst = ["D0000020FD0D", "D0000034142C", "D0000020FCF1", "D00000341341", "D0000034140E"]
+                                            # Test DSL tag IDs
+dsl_image = BASE_DIR / "Images/T4.bin"      # Test image for DSL, 320*240
+dsl_image5A = BASE_DIR / "Images/T5A.bin"   # Test image for DSL, 320*240
+dsl_image5B = BASE_DIR / "Images/T5B.bin"   # Test image for DSL, 320*240
 
 # AP Config parameters - Modify these parameters according to your network environment
-alias = "09"                                # Alias
-server = "192.168.4.74:9071"                # MQTT server
+alias = "08"                                # Alias
+server = "192.168.3.33:9071"                # MQTT server
 userName = "test"                           # Username
 password = "123456"                         # Password
-encrypt = False                             # Encryption
+encrypt = True                              # Encryption
 autoIP = False                              # Auto IP
-localIP = "192.168.4.101"                   # Local IP
+localIP = "192.168.3.101"                   # Local IP
 subnetMask = "255.255.255.0"                # Subnet Mask
-gateway = "192.168.4.1"                     # Gateway
+gateway = "192.168.3.1"                     # Gateway
 heartbeat = 60                              # Heartbeat
 
 
@@ -194,7 +215,7 @@ def publish_esl2(client, id, token, image, r, g, b):
     #0. BGRA32 data
     image_bytes = read_image_bgra(image)
     #1. BGR24 data
-    image_bytes = read_image_bgr(image)
+    #image_bytes = read_image_bgr(image)
     #2. File bytes
     # image_bytes = open(image, 'rb').read(),
     esl_list = [
@@ -227,6 +248,43 @@ def publish_esl2(client, id, token, image, r, g, b):
         ] for e in esl_list
     ])
     client.publish(appConfig.TOPIC_TASK_ESL2, data)
+    
+def publish_dsl(client, ids, token, bin, r, g, b):
+    # 0. Read bin file
+    with open(bin, 'rb') as f:
+        bin_bytes = f.read()
+        
+    # 1. Prepare DSL entities list        
+    dsl_list = []
+    for id in ids:
+        dsl_list.append(
+            DSLEntity(
+                TagID=id, 
+                Token=token,
+                HexData=bin_bytes,  
+                R=r, 
+                G=g, 
+                B=b,
+            )
+        )
+
+    # 2. MessagePack serialization
+    data = msgpack.packb([
+        [
+            e.TagID,
+            e.R,
+            e.G,
+            e.B,
+            e.Period,
+            e.Interval,
+            e.Duration,
+            e.Token,
+            e.HexData
+        ] for e in dsl_list
+    ], use_bin_type=True)
+    
+    #3. Call client.publish to send data
+    client.publish(appConfig.TOPIC_TASK_DSL, data)    
 
 # Function to publish OTA message
 def publish_ota(client, path, version, downloadUrl, confirmUrl):
@@ -240,6 +298,19 @@ def publish_ota(client, path, version, downloadUrl, confirmUrl):
         md5= str.upper(calc_md5(path))
     )
     client.publish(appConfig.TOPIC_FIRMWARE, ota.to_msgpack())
+
+# Function to publish certificate message
+def publish_certificate(client, certName, keyName, customTrustStore, extraStore, certPath, downloadUrl, confirmUrl):
+    cert = ApSecurity(
+        downloadUrl=downloadUrl,
+        confirmUrl=confirmUrl,
+        certName=certName,
+        keyName=keyName,
+        customTrustStore=customTrustStore,
+        extraStore=extraStore,
+        mD5=str.upper(calc_md5(certPath))
+    )
+    client.publish(appConfig.TOPIC_CERT, cert.to_msgpack())
 
 # Function to calculate MD5 checksum of a file
 def calc_md5(file_path: str) -> str:
@@ -255,10 +326,11 @@ def main():
     print("0: Publish Config")
     print("1: Publish ESL")
     print("2: Publish ESL2")
-    print("3: Publish DSL(TODO)")
+    print("3: Publish DSL")
     print("4: Publish DSL2(TODO)")
     print("5: Publish ESL OTA(TODO)")
     print("6: Publish Firmware OTA")
+    print("7: Publish Certificate")
     print("Press 'E' to exit.")
 
     # Configure your client connection parameters in appConfig.py
@@ -268,6 +340,11 @@ def main():
         reconnect_on_failure=True
     )
     client.username_pw_set(appConfig.USER_NAME, appConfig.PASSWORD)
+    client.tls_set(
+        ca_certs="Your_CA_Chain.crt",   # Replace with your actual CA chain certificate
+        certfile="Your_Device_Cert.crt",    # Replace with your actual device certificate
+        keyfile="Your_Device_Key.key"   # Replace with your actual device key
+    )  # Enable TLS/SSL
     client.on_connect = on_connect
     client.on_message = on_message
     client.on_disconnect = on_disconnect
@@ -276,9 +353,6 @@ def main():
 
     # Start the loop in a separate thread
     client.loop_start()
-
-    ota_download_url = "http://192.168.4.74:9070/ota/2/eStation2.1.0.44.OTA.tar?id={0}&time={1}"
-    ota_confirm_url = "http://192.168.4.74:9070/confirm?id={0}&time={1}"
 
     try:
         while True:
@@ -295,10 +369,10 @@ def main():
                         publish_esl(client, tag_id, get_token(), test_image, True, False, False)
                         continue
                     case 2:
-                        publish_esl2(client, tag_id2, get_token(), test_image2, False, True, False)
+                        publish_esl2(client, tag_id2, get_token(), test_image, False, True, False)
                         continue
                     case 3:
-                        # TODO: Implement DSL publish function
+                        publish_dsl(client, dsl_id_lst, get_token(), dsl_image5A, False, True, False)
                         continue
                     case 4:
                          # TODO: Implement DSL2 publish function
@@ -309,10 +383,22 @@ def main():
                     case 6:
                         publish_ota(
                             client, 
-                            "/Users/andersonh/Documents/GitHub/eStation/OTA/AP_OTA/eStation2.1.0.44.OTA.tar", 
-                            "1.0.44", 
-                            str.format(ota_download_url, "0001", int(time.time())),
-                            str.format(ota_confirm_url, "0001", int(time.time()))
+                            f"{firmware_folder}/{firmware_name}", 
+                            "1.1.0", 
+                            str.format(ota_download_url, appConfig.STORE_CODE, int(time.time())),
+                            str.format(confirm_url, appConfig.STORE_CODE, int(time.time()))
+                        )
+                        continue
+                    case 7:
+                        publish_certificate(
+                            client,
+                            "Your_Device_Cert.crt",     # Replace with your actual device certificate
+                            "Your_Device_Key.key",      # Replace with your actual device key
+                            ["Your_Root_CA.crt"],       # Replace with your actual root CA certificate
+                            ["Your_Issuing_CA.crt"],    # Replace with your actual issuing CA certificate
+                            f"{cert_folder}/{cert_name}",
+                            str.format(cert_download_url, cert_name),
+                            str.format(confirm_url, cert_name, int(time.time()))
                         )
                         continue
                     case _:

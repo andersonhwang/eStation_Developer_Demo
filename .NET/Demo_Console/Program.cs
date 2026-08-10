@@ -15,13 +15,13 @@ namespace Demo_Console
     {
         static int Token = 0;
         static string LogTemplate = "{Timestamp:HH:mm:ss.fff}[{Level:u1}]{Message} {NewLine}{Exception}";
-        static string APID = "009Z";
-        static string TopicConfig = "/estation/009Z/config";        // 0x01
-        static string TopicPushESL = "/estation/009Z/taskESL";      // 0x02
-        static string TopicPushESL2 = "/estation/009Z/taskESL2";    // 0x03
-        static string TopicPushDSL = "/estation/009Z/taskDSL";      // 0x04
-        static string TopicFirmware = "/estation/009Z/firmware";    // 0x05
-        static string TopicOTA = "/estation/009Z/ota";              // 0x06
+        static string APID = "003N";
+        static string TopicConfig = "/estation/003N/config";        // 0x01
+        static string TopicPushESL = "/estation/003N/taskESL";      // 0x02
+        static string TopicPushESL2 = "/estation/003N/taskESL2";    // 0x03
+        static string TopicPushDSL = "/estation/003N/taskDSL";      // 0x04
+        static string TopicFirmware = "/estation/003N/firmware";    // 0x05
+        static string TopicOTA = "/estation/003N/ota";              // 0x06
         static string TestBmp0 = "T0.bmp";  // ET0290, B/W/R, 3D, 2.9inch, 296x128
         static string TestBmp1 = "T1.bmp";  // ET0420, B/W/R, 4.2inch, 400x300
         static string TestBin2 = "T2.bin";
@@ -32,8 +32,13 @@ namespace Demo_Console
         {
             UserName = "test",
             Password = "123456",
-            Port = 9081,
-            Encrypt = false,
+            Port = 9071,
+            Encrypt = true,
+            Certificate = "mqtt-test-server.crt",
+            CertificateKey = "mqtt-test-server.key",
+            mTLS = true,
+            RootCaCertificate = "estation-root-ca.crt",
+            IssuingCaCertificate = "estation-test-ca.crt",
         };
 
         static string[] ESL_LST = [

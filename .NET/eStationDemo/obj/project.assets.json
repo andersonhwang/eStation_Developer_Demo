@@ -1941,27 +1941,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\huang\\.nuget\\packages\\": {}
+    "/Users/andersonh/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Workspace\\eStation_Developer_Edition\\.NET\\eStationDemo\\Demo_Avalonia.csproj",
+      "projectUniqueName": "/Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/Demo_Avalonia.csproj",
       "projectName": "Demo_Avalonia",
-      "projectPath": "D:\\Workspace\\eStation_Developer_Edition\\.NET\\eStationDemo\\Demo_Avalonia.csproj",
-      "packagesPath": "C:\\Users\\huang\\.nuget\\packages\\",
-      "outputPath": "D:\\Workspace\\eStation_Developer_Edition\\.NET\\eStationDemo\\obj\\",
+      "projectPath": "/Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/Demo_Avalonia.csproj",
+      "packagesPath": "/Users/andersonh/.nuget/packages/",
+      "outputPath": "/Users/andersonh/Documents/GitHub/eStation_Developer_Edition/.NET/eStationDemo/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\huang\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/andersonh/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
+        "http://192.168.4.25:5555/v3/index.json": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1979,7 +1977,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -2041,13 +2040,155 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.25, 8.0.25]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[8.0.25, 8.0.25]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.25, 8.0.25]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source http://192.168.4.25:5555/v3/index.json."
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-2f33-pr97-265q",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-2x83-8g95-xh59",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known high severity vulnerability, https://github.com/advisories/GHSA-382j-8mxh-c7x2",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4qm4-8hg2-g2xm",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-cj9g-3mj2-g8vv",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-cxmj-83gh-fp49",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-q2h6-ghwm-5qm8",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhmf-xw27-6rqr",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-v72x-2h86-7f8m",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known high severity vulnerability, https://github.com/advisories/GHSA-vh6j-jc39-fggf",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-w567-gjr2-hm5j",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MessagePack' 3.0.134-beta has a known moderate severity vulnerability, https://github.com/advisories/GHSA-wfr3-xj75-pfwh",
+      "libraryId": "MessagePack",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

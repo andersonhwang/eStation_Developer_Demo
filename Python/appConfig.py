@@ -1,6 +1,7 @@
 BROKER = "127.0.0.1"    # MQTT broker address
 PORT = 9071             # Port
-AP_ID = "00C8"          # AP ID
+STORE_CODE = "0001"     # Store code
+AP_ID = "003N"          # AP ID
 USER_NAME = "test"      # User name
 PASSWORD = "123456"     # Password
 
@@ -11,6 +12,7 @@ TOPIC_TASK_DSL = f"/estation/{AP_ID}/taskDSL"
 TOPIC_TASK_DSL2 = f"/estation/{AP_ID}/taskDSL2"
 TOPIC_FIRMWARE = f"/estation/{AP_ID}/firmware"
 TOPIC_OTA = f"/estation/{AP_ID}/ota"
+TOPIC_CERT = f"/estation/{AP_ID}/cert"
 
 TOPIC_INFOR = f"/estation/{AP_ID}/infor"
 TOPIC_RESULT = f"/estation/{AP_ID}/result"

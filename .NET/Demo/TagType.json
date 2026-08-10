@@ -225,9 +225,9 @@
   },
   {
     "Code": "4C",
-    "Height": 122,
+    "Height": 152,
     "Width": 522,
-    "Length": 254736,
+    "Length": 317376,
     "Type": "ET0430-4C",
     "Color": 3
   },
@@ -551,12 +551,20 @@
     "Type": "ET0154H-90",
     "Color": 7
   },
-  {
-    "Code": "D0",
-    "Height": 640,
-    "Width": 960,
-    "Length": 2457600,
-    "Type": "ET0240C-D0",
-    "Color": 1
-  }
+    {
+        "Code": "D0",
+        "Height": 640,
+        "Width": 960,
+        "Length": 2457600,
+        "Type": "ET0240C-D0",
+        "Color": 1
+    },
+    {
+        "Code": "A2",
+        "Height": 122,
+        "Width": 250,
+        "Length": 122000,
+        "Type": "ET0213-A2",
+        "Color": 10
+    }
 ]

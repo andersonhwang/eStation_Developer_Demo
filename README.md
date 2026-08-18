@@ -3,13 +3,20 @@ Welcome to eStation Developer Edition!
 
 eStation is designed for developers to quick integerate ETAG ESL&DSL with their projects. eStation use MQTT protocol and esay to configure/integerate.
 
-Release Date: 2026-04-13
+Release Date: 2026-08-18
 
-Firmware: 1.1.44
+Firmware: 1.2.0
+
+# 0. How to upgrade
+Before you start to develop your application, please make sure the firmware of eStation has been updated to the last version.
+There are 3 ways to upgrade your eStation:
+1. Use WPF demo tool
+2. Use OTA tool
+3. Ask technical support to help upgrade
 
 # 1. Work with Mosquitto
 
-If you are working with Mosquitton, you need edit the Mosquitto configure file mosquitto.conf:
+If you are working with Mosquitto, you need edit the Mosquitto configure file mosquitto.conf:
 ```
 allow_anonymous false  
 password_file Your_Password_File_Path_Here  # Pasword file path

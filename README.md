@@ -3,9 +3,9 @@ Welcome to eStation Developer Edition!
 
 eStation is designed for developers to quick integerate ETAG ESL&DSL with their projects. eStation use MQTT protocol and esay to configure/integerate.
 
-Release Date: 2026-08-18
+Release Date: 2026-09-09
 
-Firmware: 1.2.0
+Firmware: 1.2.2
 
 # 0. How to upgrade
 Before you start to develop your application, please make sure the firmware of eStation has been updated to the last version.

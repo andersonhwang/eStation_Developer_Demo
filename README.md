@@ -29,7 +29,7 @@ max_topic_alias 255                         # The default value is 10, need chan
 ```
 
 # 2. Python
-> Start file: demo.py
+> Demo configure file: demoConfig.py
 ```Python
 # Demo parameters - You can modify these parameters for testing
 token = random.randint(1, 0xFFFF)           # Init token

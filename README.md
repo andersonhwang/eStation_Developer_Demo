@@ -13,7 +13,9 @@ There are 3 ways to upgrade your eStation:
 1. Use WPF demo tool
 2. Use OTA tool
    OSX-Arm64: https://github.com/andersonhwang/eStation_Developer_Demo/blob/main/OTA%20Tool/eStation.Upgrade.1.2.2.osx-arm64.zip
+   
    Win-X64: https://github.com/andersonhwang/eStation_Developer_Demo/blob/main/OTA%20Tool/eStation.Upgrade.1.2.2.win-x64.zip
+   
 3. Ask technical support to help upgrade
 
 # 1. Work with Mosquitto

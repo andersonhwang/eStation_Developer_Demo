@@ -1,5 +1,6 @@
 ﻿using Demo_Common.Enum;
 using SkiaSharp;
+using System.Text.Json.Serialization;
 
 namespace Demo_Common.Entity
 {
@@ -12,9 +13,9 @@ namespace Demo_Common.Entity
     /// <param name="code">Type code</param>
     /// <param name="width">Width</param>
     /// <param name="height">Height</param>
-    /// <param name="type">Type</param>
+    /// <param name="size">Size</param>
     /// <param name="color">Color type</param>
-    public class TagType(string code, int width, int height, string type, ColorType color = ColorType.BlackRed)
+    public class TagType(string code, int width, int height, int size, ColorType color = ColorType.BlackRed)
     {
         /// <summary>
         /// Tag code
@@ -31,15 +32,17 @@ namespace Demo_Common.Entity
         /// <summary>
         /// Data length
         /// </summary>
+        [JsonIgnore]
         public int Length { get => Height * Width * 4; }
-        /// <summary>
-        /// Tag
-        /// </summary>
-        public string Type { get; private set; } = type;
         /// <summary>
         /// Size
         /// </summary>
-        public string Size { get => $"{Width}x{Height}"; }
+        public int Size { get; private set; } = size;
+        /// <summary>
+        /// Resolution
+        /// </summary>
+        [JsonIgnore]
+        public string Resolution { get => $"{Width}x{Height}"; }
         /// <summary>
         /// Color
         /// </summary>

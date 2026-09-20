@@ -204,7 +204,7 @@ namespace Demo_WPF.ViewModel
                 if (item.Status == 0x02) return TagStatus.McuReset;                 // Failed, MCU reset
                 if (item.Status == 0x03) return TagStatus.LcmdRefreshError;         // LCM refresh error
                 var type = TagHelper.GetTagType(item.TagId);
-                var battery = (type.Type == "39" || type.Type == "54") ? 22 : 25;   // Type 39&54 is frozen tag
+                var battery = (type.Code == "39" || type.Code == "54") ? 22 : 25;   // Code 39&54 is frozen tag
                 return item.Battery < battery ? TagStatus.LowPower : TagStatus.Success;
             }
         }

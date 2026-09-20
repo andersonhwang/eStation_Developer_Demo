@@ -30,7 +30,7 @@ namespace Demo_WPF.Model
         /// <summary>
         /// Tag type
         /// </summary>
-        public string TagType { get => TagHelper.GetTagType(id).Type; }
+        public string TagType { get => TagHelper.GetTagType(id).Code; }
         /// <summary>
         /// Version
         /// </summary>

@@ -33,7 +33,7 @@
             <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="※ Push firmware before OTA"/>
             <Button Grid.Row="2" Grid.Column="2" Content="Run" Command="{Binding CmdRun}" IsEnabled="{Binding IsRun, Converter={StaticResource BoolConverter}}"/>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Tag OTA" />
-            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Info.Type}" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Info.Code}" />
             <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Info.Count}" />
             <Button Grid.Row="4" Grid.Column="0"  Content="Stage#0" Command="{Binding CmdOTA}" CommandParameter="0" IsEnabled="{Binding IsRun}"/>
             <Button Grid.Row="4" Grid.Column="1"  Content="Stage#1" Command="{Binding CmdOTA}" CommandParameter="1" IsEnabled="{Binding IsRun}"/>

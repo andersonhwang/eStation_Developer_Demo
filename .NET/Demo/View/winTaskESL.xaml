@@ -32,9 +32,9 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Tag Type"/>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Type.Type}"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Type.Code}"/>
         <TextBlock Grid.Row="0" Grid.Column="2" Text="Image Size"/>
-        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Type.Size}"/>
+        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Type.Resolution}"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Image Path"/>
         <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding Esl.Path}"/>
         <Button Grid.Row="1" Grid.Column="3" Content="Browse" Command="{Binding CmdBrowse}"/>

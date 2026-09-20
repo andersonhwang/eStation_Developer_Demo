@@ -9,7 +9,6 @@ namespace Demo_WPF.Model
     {
         private string ip = string.Empty;
         private string[] tags = [];
-        private string type = string.Empty;
         /// <summary>
         /// IP address
         /// </summary>
@@ -23,15 +22,15 @@ namespace Demo_WPF.Model
             set
             {
                 tags = value;
-                if (tags.Length == 0) Type = string.Empty;
+                if (tags.Length == 0) Code = string.Empty;
                 else
                 {
                     var tagType = TagHelper.GetTagType(tags[0]);
-                    Type = tagType.Type;
                     Code = tagType.Code;
                 }
                 NotifyPropertyChanged(nameof(Tags));
                 NotifyPropertyChanged(nameof(Count));
+                NotifyPropertyChanged(nameof(Code));
             }
         }
         public int Count { get => tags.Length; }
@@ -39,10 +38,6 @@ namespace Demo_WPF.Model
         /// Type code
         /// </summary>
         public string Code { get; private set; } = string.Empty;
-        /// <summary>
-        /// Type name
-        /// </summary>
-        public string Type { get => type; set { type = value; NotifyPropertyChanged(nameof(Type)); } }
     }
 
     /// <summary>
